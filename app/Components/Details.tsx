@@ -55,8 +55,8 @@ const CategoryHeader = ({
 };
 
 const CategoryContent = ({
-                           tips,
-                         }: {
+                        tips,
+                        }: {
   tips: { type: "good" | "improve"; tip: string; explanation: string }[];
 }) => {
   return (

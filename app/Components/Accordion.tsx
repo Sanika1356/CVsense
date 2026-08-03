@@ -127,7 +127,7 @@ export const AccordionHeader: React.FC<AccordionHeaderProps> = ({
         focus:outline-none
         transition-colors duration-200 flex items-center justify-between cursor-pointer
         ${className}
-      `}
+        `}
         >
             <div className="flex items-center space-x-3">
                 {iconPosition === "left" && (icon || defaultIcon)}
@@ -145,10 +145,10 @@ interface AccordionContentProps {
 }
 
 export const AccordionContent: React.FC<AccordionContentProps> = ({
-                                                                      itemId,
-                                                                      children,
-                                                                      className = "",
-                                                                  }) => {
+                                                                    itemId,
+                                                                    children,
+                                                                    className = "",
+                                                                }) => {
     const { isItemActive } = useAccordion();
     const isActive = isItemActive(itemId);
 
@@ -158,7 +158,7 @@ export const AccordionContent: React.FC<AccordionContentProps> = ({
         overflow-hidden transition-all duration-300 ease-in-out
         ${isActive ? "max-h-fit opacity-100" : "max-h-0 opacity-0"}
         ${className}
-      `}
+        `}
         >
             <div className="px-4 py-3 ">{children}</div>
         </div>
