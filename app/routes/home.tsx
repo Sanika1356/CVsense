@@ -8,7 +8,7 @@ import ResumeCard from "~/Components/ResumeCard";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "Resumind" },
+    { title: "CVsense" },
     { name: "description", content: "Smart feedback for your dream job!" },
   ];
 }
