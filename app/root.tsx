@@ -34,14 +34,15 @@ export function Layout({ children }: { children: React.ReactNode }) {
   }, [init]);
 
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="theme-color" content="#06070c" />
         <Meta />
         <Links />
       </head>
-      <body>
+      <body className="bg-bg-950 text-slate-200">
         <script src="https://js.puter.com/v2/"></script>
         {children}
         <ScrollRestoration />
@@ -72,11 +73,11 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   }
 
   return (
-    <main className="pt-16 p-4 container mx-auto">
+    <main className="dashboard-bg min-h-screen pt-16 p-4 container mx-auto">
       <h1>{message}</h1>
-      <p>{details}</p>
+      <p className="text-slate-400">{details}</p>
       {stack && (
-        <pre className="w-full p-4 overflow-x-auto">
+        <pre className="w-full p-4 overflow-x-auto panel text-rose-300 text-sm">
           <code>{stack}</code>
         </pre>
       )}

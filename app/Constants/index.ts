@@ -223,6 +223,14 @@ export const AIResponseFormat = `
                 explanation: string; //explain in detail here
             }[]; //give 3-4 tips
         };
+        skillMatch: {
+            matchPercentage: number; //0-100, how well the resume's skills match the job title/description. If no job description was given, base it on how well the skills match the job title/industry.
+            matchedSkills: string[]; //skills found in the resume that are relevant to the job, 4-10 items
+            missingSkills: string[]; //important skills for the job that are NOT clearly present in the resume, 3-8 items
+        };
+        strengths: string[]; //3-5 short, specific things the resume does well overall
+        weaknesses: string[]; //3-5 short, specific things holding the resume back overall
+        suggestions: string[]; //3-6 short, concrete, actionable suggestions to improve the resume
     }`;
 
 export const prepareInstructions = ({jobTitle, jobDescription}: { jobTitle: string; jobDescription: string; }) =>
@@ -233,6 +241,9 @@ export const prepareInstructions = ({jobTitle, jobDescription}: { jobTitle: stri
     If there is a lot to improve, don't hesitate to give low scores. This is to help the user to improve their resume.
     If available, use the job description for the job user is applying to to give more detailed feedback.
     If provided, take the job description into consideration.
+    Also assess how well the resume's skills match the target role: give a skill match percentage, list the
+    matched skills, and list important skills that appear to be missing. Additionally summarize the resume's
+    overall strengths, weaknesses, and concrete suggestions for improvement.
     The job title is: ${jobTitle}
     The job description is: ${jobDescription}
     Provide the feedback using the following format:

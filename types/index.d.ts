@@ -48,4 +48,12 @@ interface Feedback {
             explanation: string;
         }[];
     };
+    skillMatch?: {
+        matchPercentage: number; // 0-100, how well resume skills match the job
+        matchedSkills: string[];
+        missingSkills: string[];
+    };
+    strengths?: string[];
+    weaknesses?: string[];
+    suggestions?: string[];
 }

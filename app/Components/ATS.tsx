@@ -10,64 +10,67 @@ interface ATSProps {
   suggestions: Suggestion[];
 }
 
+const CheckIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" className="size-4.5 shrink-0 mt-0.5" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="12" cy="12" r="9" fill="currentColor" fillOpacity="0.15" />
+    <path d="M8.5 12.5L10.75 14.75L15.5 9.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+const WarnIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" className="size-4.5 shrink-0 mt-0.5" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="12" cy="12" r="9" fill="currentColor" fillOpacity="0.15" />
+    <path d="M12 8V13" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+    <circle cx="12" cy="16" r="0.9" fill="currentColor" />
+  </svg>
+);
+
 const ATS: React.FC<ATSProps> = ({ score, suggestions }) => {
-  // Determine background gradient based on score
-  const gradientClass = score > 69
-    ? 'from-green-100'
-    : score > 49
-      ? 'from-yellow-100'
-      : 'from-red-100';
+  const tone = score > 69 ? 'good' : score > 49 ? 'warn' : 'bad';
 
-  // Determine icon based on score
-  const iconSrc = score > 69
-    ? '/icons/ats-good.svg'
-    : score > 49
-      ? '/icons/ats-warning.svg'
-      : '/icons/ats-bad.svg';
+  const toneStyles = {
+    good: { ring: 'from-emerald-500/25', badge: 'bg-emerald-500/10 border-emerald-500/25 text-emerald-300', icon: 'text-emerald-400' },
+    warn: { ring: 'from-amber-500/25', badge: 'bg-amber-500/10 border-amber-500/25 text-amber-300', icon: 'text-amber-400' },
+    bad: { ring: 'from-rose-500/25', badge: 'bg-rose-500/10 border-rose-500/25 text-rose-300', icon: 'text-rose-400' },
+  }[tone];
 
-  // Determine subtitle based on score
-  const subtitle = score > 69
-    ? 'Great Job!'
-    : score > 49
-      ? 'Good Start'
-      : 'Needs Improvement';
+  const subtitle = score > 69 ? 'Great job!' : score > 49 ? 'Good start' : 'Needs improvement';
 
   return (
-    <div className={`bg-linear-to-b ${gradientClass} to-white rounded-2xl shadow-md w-full p-6`}>
-      {/* Top section with icon and headline */}
-      <div className="flex items-center gap-4 mb-6">
-        <img src={iconSrc} alt="ATS Score Icon" className="w-12 h-12" />
-        <div>
-          <h2 className="text-2xl font-bold">ATS Score - {score}/100</h2>
+    <div className={`panel panel-hover scan-beam bg-linear-to-b ${toneStyles.ring} to-surface-800/0 w-full p-6`}>
+      <div className="flex items-center justify-between gap-4 mb-6">
+        <div className="flex items-center gap-4">
+          <div className={`flex size-12 items-center justify-center rounded-2xl border ${toneStyles.badge}`}>
+            <svg viewBox="0 0 24 24" fill="none" className="size-6" xmlns="http://www.w3.org/2000/svg">
+              <path d="M9 12.5L11 14.5L15.5 9.5M4 6.5C4 5.11929 5.11929 4 6.5 4H17.5C18.8807 4 20 5.11929 20 6.5V17.5C20 18.8807 18.8807 20 17.5 20H6.5C5.11929 20 4 18.8807 4 17.5V6.5Z" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </div>
+          <div>
+            <p className="section-eyebrow">ATS Compatibility</p>
+            <h2 className="text-2xl font-bold text-slate-100 font-mono">{score}<span className="text-slate-500 text-lg">/100</span></h2>
+          </div>
         </div>
+        <span className={`stat-pill ${toneStyles.badge} border`}>{subtitle}</span>
       </div>
 
-      {/* Description section */}
-      <div className="mb-6">
-        <h3 className="text-xl font-semibold mb-2">{subtitle}</h3>
-        <p className="text-gray-600 mb-4">
-          This score represents how well your resume is likely to perform in Applicant Tracking Systems used by employers.
-        </p>
+      <p className="text-slate-400 mb-5 text-sm leading-relaxed">
+        This score represents how well your resume is likely to perform in Applicant Tracking Systems used by employers.
+      </p>
 
-        {/* Suggestions list */}
-        <div className="space-y-3">
-          {suggestions.map((suggestion, index) => (
-            <div key={index} className="flex items-start gap-3">
-              <img
-                src={suggestion.type === "good" ? "/icons/check.svg" : "/icons/warning.svg"}
-                alt={suggestion.type === "good" ? "Check" : "Warning"}
-                className="w-5 h-5 mt-1"
-              />
-              <p className={suggestion.type === "good" ? "text-green-700" : "text-amber-700"}>
-                {suggestion.tip}
-              </p>
-            </div>
-          ))}
-        </div>
+      <div className="space-y-3">
+        {suggestions.map((suggestion, index) => (
+          <div key={index} className="flex items-start gap-3">
+            <span className={suggestion.type === "good" ? "text-emerald-400" : "text-amber-400"}>
+              {suggestion.type === "good" ? <CheckIcon /> : <WarnIcon />}
+            </span>
+            <p className={suggestion.type === "good" ? "text-emerald-300/90 text-sm" : "text-amber-300/90 text-sm"}>
+              {suggestion.tip}
+            </p>
+          </div>
+        ))}
       </div>
 
-      {/* Closing encouragement */}
-      <p className="text-gray-700 italic">
+      <p className="text-slate-500 italic text-sm mt-6 border-t border-border-softer pt-4">
         Keep refining your resume to improve your chances of getting past ATS filters and into the hands of recruiters.
       </p>
     </div>

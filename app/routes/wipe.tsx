@@ -31,27 +31,30 @@ const WipeApp = () => {
     };
 
     if (isLoading) {
-        return <div>Loading...</div>;
+        return <div className="dashboard-bg min-h-screen flex items-center justify-center text-slate-400">Loading...</div>;
     }
 
     if (error) {
-        return <div>Error {error}</div>;
+        return <div className="dashboard-bg min-h-screen flex items-center justify-center text-rose-400">Error {error}</div>;
     }
 
     return (
-        <div>
-            Authenticated as: {auth.user?.username}
-            <div>Existing files:</div>
-            <div className="flex flex-col gap-4">
-                {files.map((file) => (
-                    <div key={file.id} className="flex flex-row gap-4">
-                        <p>{file.name}</p>
-                    </div>
-                ))}
+        <div className="dashboard-bg min-h-screen p-8 flex flex-col gap-6">
+            <p className="text-slate-400 text-sm">Authenticated as: <span className="text-slate-200 font-medium">{auth.user?.username}</span></p>
+            <div className="panel p-6">
+                <p className="section-eyebrow mb-4">Existing files</p>
+                <div className="flex flex-col gap-2">
+                    {files.map((file) => (
+                        <div key={file.id} className="flex flex-row gap-4 text-slate-300 text-sm">
+                            <p>{file.name}</p>
+                        </div>
+                    ))}
+                    {files.length === 0 && <p className="text-slate-500 text-sm">No files.</p>}
+                </div>
             </div>
             <div>
                 <button
-                    className="bg-blue-500 text-white px-4 py-2 rounded-md cursor-pointer"
+                    className="secondary-button text-rose-300 border-rose-500/30 hover:bg-rose-500/10"
                     onClick={() => handleDelete()}
                 >
                     Wipe App Data

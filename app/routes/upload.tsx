@@ -3,7 +3,7 @@ import {usePuterStore} from "~/lib/puter";
 import {useNavigate} from "react-router";
 import {convertPdfToImage} from "~/lib/pdf2img";
 import {extractJsonFromText, generateUUID, getAIResponseText} from "~/lib/utils";
-import { prepareInstructions } from '../../Constants';
+import { prepareInstructions } from '../Constants';
 import Navbar from '~/Components/Navbar';
 import FileUploader from '~/Components/FileUploader';
 
@@ -111,17 +111,26 @@ const Upload = () => {
     }
 
     return (
-        <main className="bg-[url('/images/bg-main.svg')] bg-cover">
+        <main className="dashboard-bg">
             <Navbar />
 
             <section className="main-section">
                 <div className="page-heading py-16">
+                    <span className="section-eyebrow flex items-center gap-2">
+                        <span className="size-1.5 rounded-full bg-accent-violet pulse-glow" />
+                        New Analysis
+                    </span>
                     <h1>Smart feedback for your dream job</h1>
                     {isProcessing ? (
                         <>
-                            <h2 className={statusText.startsWith('Error:') ? 'text-red-600 font-semibold' : ''}>{statusText}</h2>
+                            <h2 className={statusText.startsWith('Error:') ? 'text-rose-400 font-semibold' : ''}>{statusText}</h2>
                             {!statusText.startsWith('Error:') && (
-                                <img src="/images/resume-scan.gif" className="w-full" alt="Analyzing..." />
+                                <div className="w-full max-w-md flex flex-col items-center gap-4">
+                                    <img src="/images/resume-scan.gif" className="w-full rounded-2xl border border-border-soft" alt="Analyzing..." />
+                                    <div className="w-full h-1.5 rounded-full bg-white/5 overflow-hidden">
+                                        <div className="h-full w-1/2 rounded-full primary-gradient animate-pulse" />
+                                    </div>
+                                </div>
                             )}
                             {statusText.startsWith('Error:') && (
                                 <div className="mt-4">
@@ -138,21 +147,21 @@ const Upload = () => {
                             )}
                         </>
                     ) : (
-                        <h2>Drop your resume for an ATS score and improvement tips</h2>
+                        <h2>Drop your resume for an ATS score, skill match, and improvement tips</h2>
                     )}
                     {!isProcessing && (
-                        <form id="upload-form" onSubmit={handleSubmit} className="flex flex-col gap-4 mt-8">
+                        <form id="upload-form" onSubmit={handleSubmit} className="flex flex-col gap-4 mt-8 panel p-8 max-w-xl w-full">
                             <div className="form-div">
                                 <label htmlFor="company-name">Company Name</label>
-                                <input type="text" name="company-name" placeholder="Company Name" id="company-name" />
+                                <input type="text" name="company-name" placeholder="e.g. Google" id="company-name" />
                             </div>
                             <div className="form-div">
                                 <label htmlFor="job-title">Job Title</label>
-                                <input type="text" name="job-title" placeholder="Job Title" id="job-title" />
+                                <input type="text" name="job-title" placeholder="e.g. Frontend Developer" id="job-title" />
                             </div>
                             <div className="form-div">
                                 <label htmlFor="job-description">Job Description</label>
-                                <textarea rows={5} name="job-description" placeholder="Job Description" id="job-description" />
+                                <textarea rows={5} name="job-description" placeholder="Paste the job description for a more tailored skill match" id="job-description" />
                             </div>
 
                             <div className="form-div">
@@ -161,6 +170,9 @@ const Upload = () => {
                             </div>
 
                             <button className="primary-button" type="submit">
+                                <svg viewBox="0 0 24 24" fill="none" className="size-4.5" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M13 3L4 14H12L11 21L20 10H12L13 3Z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" strokeLinecap="round" />
+                                </svg>
                                 Analyze Resume
                             </button>
                         </form>

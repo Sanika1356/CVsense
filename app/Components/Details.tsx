@@ -10,22 +10,23 @@ const ScoreBadge = ({ score }: { score: number }) => {
   return (
       <div
           className={cn(
-              "flex flex-row gap-1 items-center px-2 py-0.5 rounded-[96px]",
+              "flex flex-row gap-1.5 items-center px-2.5 py-1 rounded-[96px] border",
               score > 69
-                  ? "bg-badge-green"
+                  ? "bg-badge-green border-emerald-500/20"
                   : score > 39
-                      ? "bg-badge-yellow"
-                      : "bg-badge-red"
+                      ? "bg-badge-yellow border-amber-500/20"
+                      : "bg-badge-red border-rose-500/20"
           )}
       >
-        <img
-            src={score > 69 ? "/icons/check.svg" : "/icons/warning.svg"}
-            alt="score"
-            className="size-4"
+        <span
+            className={cn(
+                "size-1.5 rounded-full",
+                score > 69 ? "bg-emerald-400" : score > 39 ? "bg-amber-400" : "bg-rose-400"
+            )}
         />
         <p
             className={cn(
-                "text-sm font-medium",
+                "text-sm font-medium font-mono",
                 score > 69
                     ? "text-badge-green-text"
                     : score > 39
@@ -48,11 +49,26 @@ const CategoryHeader = ({
 }) => {
   return (
       <div className="flex flex-row gap-4 items-center py-2">
-        <p className="text-2xl font-semibold">{title}</p>
+        <p className="text-xl font-semibold text-slate-100">{title}</p>
         <ScoreBadge score={categoryScore} />
       </div>
   );
 };
+
+const GoodIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" className="size-5 shrink-0 text-emerald-400" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="12" cy="12" r="9" fill="currentColor" fillOpacity="0.12" />
+    <path d="M8.5 12.5L10.75 14.75L15.5 9.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+const ImproveIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" className="size-5 shrink-0 text-amber-400" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="12" cy="12" r="9" fill="currentColor" fillOpacity="0.12" />
+    <path d="M12 8V13" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+    <circle cx="12" cy="16" r="0.9" fill="currentColor" />
+  </svg>
+);
 
 const CategoryContent = ({
                         tips,
@@ -61,17 +77,11 @@ const CategoryContent = ({
 }) => {
   return (
       <div className="flex flex-col gap-4 items-center w-full">
-        <div className="bg-gray-50 w-full rounded-lg px-5 py-4 grid grid-cols-2 gap-4">
+        <div className="bg-surface-700/40 border border-border-softer w-full rounded-lg px-5 py-4 grid grid-cols-2 max-sm:grid-cols-1 gap-4">
           {tips.map((tip, index) => (
               <div className="flex flex-row gap-2 items-center" key={index}>
-                <img
-                    src={
-                      tip.type === "good" ? "/icons/check.svg" : "/icons/warning.svg"
-                    }
-                    alt="score"
-                    className="size-5"
-                />
-                <p className="text-xl text-gray-500 ">{tip.tip}</p>
+                {tip.type === "good" ? <GoodIcon /> : <ImproveIcon />}
+                <p className="text-sm text-slate-300">{tip.tip}</p>
               </div>
           ))}
         </div>
@@ -80,25 +90,17 @@ const CategoryContent = ({
               <div
                   key={index + tip.tip}
                   className={cn(
-                      "flex flex-col gap-2 rounded-2xl p-4",
+                      "flex flex-col gap-2 rounded-2xl p-4 border",
                       tip.type === "good"
-                          ? "bg-green-50 border border-green-200 text-green-700"
-                          : "bg-yellow-50 border border-yellow-200 text-yellow-700"
+                          ? "bg-emerald-500/5 border-emerald-500/20 text-emerald-300"
+                          : "bg-amber-500/5 border-amber-500/20 text-amber-300"
                   )}
               >
                 <div className="flex flex-row gap-2 items-center">
-                  <img
-                      src={
-                        tip.type === "good"
-                            ? "/icons/check.svg"
-                            : "/icons/warning.svg"
-                      }
-                      alt="score"
-                      className="size-5"
-                  />
-                  <p className="text-xl font-semibold">{tip.tip}</p>
+                  {tip.type === "good" ? <GoodIcon /> : <ImproveIcon />}
+                  <p className="text-base font-semibold">{tip.tip}</p>
                 </div>
-                <p>{tip.explanation}</p>
+                <p className="text-sm text-slate-400">{tip.explanation}</p>
               </div>
           ))}
         </div>
@@ -108,7 +110,7 @@ const CategoryContent = ({
 
 const Details = ({ feedback }: { feedback: Feedback }) => {
   return (
-      <div className="flex flex-col gap-4 w-full">
+      <div className="panel flex flex-col gap-4 w-full p-2">
         <Accordion>
           <AccordionItem id="tone-style">
             <AccordionHeader itemId="tone-style">
