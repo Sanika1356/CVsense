@@ -31,7 +31,7 @@ h1 {
 }
 
 h2 {
-  @apply text-3xl text-dark-200;
+  @apply text-3xl text-shadow-dark-200;
 }
 
 label {
