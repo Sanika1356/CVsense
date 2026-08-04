@@ -334,24 +334,41 @@ export const usePuterStore = create<PuterStore>((set, get) => {
             return;
         }
 
-        return puter.ai.chat(
-            [
-                {
-                    role: "user",
-                    content: [
-                        {
-                            type: "file",
-                            puter_path: path,
-                        },
-                        {
-                            type: "text",
-                            text: message,
-                        },
-                    ],
-                },
-            ],
-            { model: "claude-3-7-sonnet" }
-        ) as Promise<AIResponse | undefined>;
+        const AI_TIMEOUT_MS = 180_000; // Increased to 3 minutes
+        
+        try {
+            const chatPromise = puter.ai.chat(
+                [
+                    {
+                        role: "user",
+                        content: [
+                            {
+                                type: "file",
+                                puter_path: path,
+                            },
+                            {
+                                type: "text",
+                                text: message,
+                            },
+                        ],
+                    },
+                ],
+                { model: "claude-sonnet-4-6" }
+            ) as Promise<AIResponse>;
+
+            const timeoutPromise = new Promise<AIResponse>((_, reject) =>
+                setTimeout(
+                    () => reject(new Error("Analysis timed out after 3 minutes. The AI service may be busy. Please try again.")),
+                    AI_TIMEOUT_MS
+                )
+            );
+
+            const result = await Promise.race([chatPromise, timeoutPromise]);
+            return result;
+        } catch (error) {
+            console.error('AI feedback error:', error);
+            throw error;
+        }
     };
 
     const img2txt = async (image: string | File | Blob, testMode?: boolean) => {

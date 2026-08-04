@@ -19,3 +19,21 @@ export function formatSize(bytes: number): string {
 }
 
 export const generateUUID = () => crypto.randomUUID();
+
+export function extractJsonFromText(text: string): unknown {
+    const trimmed = text.trim();
+    const fenced = trimmed.match(/```(?:json)?\s*([\s\S]*?)```/);
+    const jsonText = fenced ? fenced[1].trim() : trimmed;
+    return JSON.parse(jsonText);
+}
+
+export function getAIResponseText(content: AIResponse["message"]["content"]): string {
+    if (typeof content === "string") return content;
+    if (Array.isArray(content)) {
+        const textPart = content.find(
+            (part) => typeof part === "object" && part !== null && "text" in part
+        );
+        if (textPart && typeof textPart.text === "string") return textPart.text;
+    }
+    throw new Error("Unexpected AI response format");
+}

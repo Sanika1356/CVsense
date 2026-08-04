@@ -2,7 +2,7 @@ import {type SubmitEvent, useState} from 'react'
 import {usePuterStore} from "~/lib/puter";
 import {useNavigate} from "react-router";
 import {convertPdfToImage} from "~/lib/pdf2img";
-import {generateUUID} from "~/lib/utils";
+import {extractJsonFromText, generateUUID, getAIResponseText} from "~/lib/utils";
 import { prepareInstructions } from '../../Constants';
 import Navbar from '~/Components/Navbar';
 import FileUploader from '~/Components/FileUploader';
@@ -21,46 +21,78 @@ const Upload = () => {
     const handleAnalyze = async ({ companyName, jobTitle, jobDescription, file }: { companyName: string, jobTitle: string, jobDescription: string, file: File  }) => {
         setIsProcessing(true);
 
-        setStatusText('Uploading the file...');
-        const uploadedFile = await fs.upload([file]);
-        if(!uploadedFile) return setStatusText('Error: Failed to upload file');
+        try {
+            console.log('Starting analysis process...');
+            
+            setStatusText('Uploading the file...');
+            const uploadedFile = await fs.upload([file]);
+            if (!uploadedFile) throw new Error('Failed to upload file');
+            console.log('File uploaded successfully:', uploadedFile.path);
 
-        setStatusText('Converting to image...');
-        const imageFile = await convertPdfToImage(file);
-        if(!imageFile.file) return setStatusText(`Error: ${imageFile.error || 'Failed to convert PDF to image'}`);
+            setStatusText('Converting to image...');
+            const imageFile = await convertPdfToImage(file);
+            if (!imageFile.file) {
+                throw new Error(imageFile.error || 'Failed to convert PDF to image');
+            }
+            console.log('PDF converted to image successfully');
 
-        setStatusText('Uploading the image...');
-        const uploadedImage = await fs.upload([imageFile.file]);
-        if(!uploadedImage) return setStatusText('Error: Failed to upload image');
+            setStatusText('Uploading the image...');
+            const uploadedImage = await fs.upload([imageFile.file]);
+            if (!uploadedImage) throw new Error('Failed to upload image');
+            console.log('Image uploaded successfully:', uploadedImage.path);
 
-        setStatusText('Preparing data...');
-        const uuid = generateUUID();
-        const data = {
-            id: uuid,
-            resumePath: uploadedFile.path,
-            imagePath: uploadedImage.path,
-            companyName, jobTitle, jobDescription,
-            feedback: '',
+            setStatusText('Preparing data...');
+            const uuid = generateUUID();
+            const data = {
+                id: uuid,
+                resumePath: uploadedFile.path,
+                imagePath: uploadedImage.path,
+                companyName,
+                jobTitle,
+                jobDescription,
+                feedback: '' as Feedback | '',
+            };
+            await kv.set(`resume:${uuid}`, JSON.stringify(data));
+            console.log('Data prepared and saved with ID:', uuid);
+
+            setStatusText('Analyzing with AI (this may take 2-3 minutes)...');
+            console.log('Sending to AI for analysis...');
+
+            const feedback = await ai.feedback(
+                uploadedFile.path,
+                prepareInstructions({ jobTitle, jobDescription })
+            );
+            
+            if (!feedback) {
+                throw new Error('AI analysis returned no response. The service might be busy. Please try again.');
+            }
+            console.log('AI feedback received successfully');
+
+            setStatusText('Processing AI response...');
+            const feedbackText = getAIResponseText(feedback.message.content);
+            console.log('Extracted feedback text, parsing JSON...');
+            
+            const parsedFeedback = extractJsonFromText(feedbackText) as Feedback;
+            
+            if (!parsedFeedback || typeof parsedFeedback.overallScore !== 'number') {
+                console.error('Invalid feedback format:', parsedFeedback);
+                throw new Error('Invalid AI response format. Please try again.');
+            }
+            
+            data.feedback = parsedFeedback;
+            await kv.set(`resume:${uuid}`, JSON.stringify(data));
+            console.log('Analysis complete! Overall score:', parsedFeedback.overallScore);
+            
+            setStatusText('Analysis complete! Redirecting...');
+            setTimeout(() => {
+                navigate(`/resume/${uuid}`);
+            }, 500);
+        } catch (err) {
+            console.error('Analysis error:', err);
+            const message = err instanceof Error ? err.message : 'Something went wrong during analysis';
+            setStatusText(`Error: ${message}`);
+            setIsProcessing(false);
         }
-        await kv.set(`resume:${uuid}`, JSON.stringify(data));
-
-        setStatusText('Analyzing...');
-
-        const feedback = await ai.feedback(
-            uploadedFile.path,
-            prepareInstructions({ jobTitle, jobDescription })
-        )
-        if (!feedback) return setStatusText('Error: Failed to analyze resume');
-
-        const feedbackText = typeof feedback.message.content === 'string'
-            ? feedback.message.content
-            : feedback.message.content[0].text;
-
-        data.feedback = JSON.parse(feedbackText);
-        await kv.set(`resume:${uuid}`, JSON.stringify(data));
-        setStatusText('Analysis complete, redirecting...');
-        console.log(data);
-        navigate(`/resume/${uuid}`);
     }
 
     const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
@@ -87,8 +119,23 @@ const Upload = () => {
                     <h1>Smart feedback for your dream job</h1>
                     {isProcessing ? (
                         <>
-                            <h2>{statusText}</h2>
-                            <img src="/images/resume-scan.gif" className="w-full" />
+                            <h2 className={statusText.startsWith('Error:') ? 'text-red-600 font-semibold' : ''}>{statusText}</h2>
+                            {!statusText.startsWith('Error:') && (
+                                <img src="/images/resume-scan.gif" className="w-full" alt="Analyzing..." />
+                            )}
+                            {statusText.startsWith('Error:') && (
+                                <div className="mt-4">
+                                    <button 
+                                        onClick={() => {
+                                            setIsProcessing(false);
+                                            setStatusText('');
+                                        }} 
+                                        className="primary-button"
+                                    >
+                                        Try Again
+                                    </button>
+                                </div>
+                            )}
                         </>
                     ) : (
                         <h2>Drop your resume for an ATS score and improvement tips</h2>
