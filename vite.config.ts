@@ -7,4 +7,12 @@ export default defineConfig({
   resolve: {
     tsconfigPaths: true,
   },
+  build: {
+    rollupOptions: {
+      external: ["html2canvas", "jspdf", "pdfjs-dist"],
+    },
+  },
+  ssr: {
+    external: ["html2canvas", "jspdf", "pdfjs-dist"],
+  },
 });

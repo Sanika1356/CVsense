@@ -4,7 +4,9 @@
 
 export async function exportElementToPdf(element: HTMLElement, fileName: string) {
     const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
+        // @ts-ignore
         import("html2canvas"),
+        // @ts-ignore
         import("jspdf"),
     ]);
 
