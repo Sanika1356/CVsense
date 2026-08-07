@@ -57,12 +57,17 @@ const Resume = () => {
         loadResume();
     }, [id]);
 
+    const [exportSuccess, setExportSuccess] = useState(false);
+
     const handleExportPdf = async () => {
         if (!reportRef.current || isExporting) return;
         setIsExporting(true);
+        setExportSuccess(false);
         try {
             const fileSafeName = (companyName || 'resume').replace(/[^a-z0-9]+/gi, '-').toLowerCase();
             await exportElementToPdf(reportRef.current, `cvsense-report-${fileSafeName || id}.pdf`);
+            setExportSuccess(true);
+            setTimeout(() => setExportSuccess(false), 4000);
         } catch (err) {
             console.error('Failed to export PDF:', err);
         } finally {
@@ -81,29 +86,36 @@ const Resume = () => {
                 </Link>
 
                 {feedback && (
-                    <button
-                        onClick={handleExportPdf}
-                        disabled={isExporting}
-                        className="secondary-button text-sm disabled:opacity-60 disabled:cursor-wait"
-                    >
-                        {isExporting ? (
-                            <>
-                                <svg className="size-4 animate-spin" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2.5" strokeOpacity="0.2" />
-                                    <path d="M21 12a9 9 0 00-9-9" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-                                </svg>
-                                Generating…
-                            </>
-                        ) : (
-                            <>
-                                <svg viewBox="0 0 24 24" fill="none" className="size-4" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M12 4V15M12 15L8.5 11.5M12 15L15.5 11.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-                                    <path d="M5 17V18.5C5 19.3284 5.67157 20 6.5 20H17.5C18.3284 20 19 19.3284 19 18.5V17" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-                                </svg>
-                                Download PDF Report
-                            </>
+                    <div className="flex items-center gap-3">
+                        {exportSuccess && (
+                            <span className="text-xs font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-3 py-1.5 rounded-full animate-in fade-in">
+                                ✓ PDF Downloaded Successfully!
+                            </span>
                         )}
-                    </button>
+                        <button
+                            onClick={handleExportPdf}
+                            disabled={isExporting}
+                            className="primary-button text-sm px-5 py-2.5 disabled:opacity-60 disabled:cursor-wait"
+                        >
+                            {isExporting ? (
+                                <>
+                                    <svg className="size-4 animate-spin" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2.5" strokeOpacity="0.2" />
+                                        <path d="M21 12a9 9 0 00-9-9" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+                                    </svg>
+                                    Generating PDF…
+                                </>
+                            ) : (
+                                <>
+                                    <svg viewBox="0 0 24 24" fill="none" className="size-4" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M12 4V15M12 15L8.5 11.5M12 15L15.5 11.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                                        <path d="M5 17V18.5C5 19.3284 5.67157 20 6.5 20H17.5C18.3284 20 19 19.3284 19 18.5V17" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                                    </svg>
+                                    Export Results (PDF)
+                                </>
+                            )}
+                        </button>
+                    </div>
                 )}
             </nav>
             <div className="flex flex-row w-full max-lg:flex-col-reverse">

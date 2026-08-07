@@ -18,7 +18,8 @@ export default function Home() {
   const navigate = useNavigate();
   const [resumes, setResumes] = useState<Resume[]>([]);
   const [loadingResumes, setLoadingResumes] = useState(false);
-  const [query, setQuery] = useState("");
+  const [filter, setFilter] = useState<'all' | 'high' | 'needs_work'>('all');
+  const [query, setQuery] = useState('');
 
   useEffect(() => {
     if(!auth.isAuthenticated) navigate('/auth?next=/');
@@ -42,13 +43,18 @@ export default function Home() {
   }, []);
 
   const filteredResumes = useMemo(() => {
-    if (!query.trim()) return resumes;
-    const q = query.toLowerCase();
-    return resumes.filter((r) =>
+    return resumes.filter((r) => {
+      if (filter === 'high' && r.feedback.overallScore < 70) return false;
+      if (filter === 'needs_work' && r.feedback.overallScore >= 70) return false;
+
+      if (!query.trim()) return true;
+      const q = query.toLowerCase();
+      return (
         r.companyName?.toLowerCase().includes(q) ||
         r.jobTitle?.toLowerCase().includes(q)
-    );
-  }, [resumes, query]);
+      );
+    });
+  }, [resumes, query, filter]);
 
   return <main className="dashboard-bg">
     <Navbar />
@@ -68,17 +74,45 @@ export default function Home() {
       </div>
 
       {!loadingResumes && resumes.length > 0 && (
-          <div className="w-full max-w-md relative">
-            <svg viewBox="0 0 24 24" fill="none" className="size-4.5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="1.6" />
-              <path d="M21 21L16.5 16.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-            </svg>
-            <input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search by company or job title..."
-                className="pl-11"
-            />
+          <div className="flex flex-col items-center gap-4 w-full max-w-xl">
+            <div className="w-full relative">
+              <svg viewBox="0 0 24 24" fill="none" className="size-4.5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="1.6" />
+                <path d="M21 21L16.5 16.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+              </svg>
+              <input
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Search by company or job title..."
+                  className="pl-11 pr-10"
+              />
+              {query && (
+                <button onClick={() => setQuery('')} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-200">
+                  ✕
+                </button>
+              )}
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setFilter('all')}
+                className={`filter-pill ${filter === 'all' ? 'bg-accent-violet/20 border-accent-violet text-white' : 'bg-surface-700/50 border-border-soft text-slate-400 hover:text-slate-200'}`}
+              >
+                All ({resumes.length})
+              </button>
+              <button
+                onClick={() => setFilter('high')}
+                className={`filter-pill ${filter === 'high' ? 'bg-emerald-500/20 border-emerald-500 text-emerald-300' : 'bg-surface-700/50 border-border-soft text-slate-400 hover:text-slate-200'}`}
+              >
+                High Score ≥ 70 ({resumes.filter(r => r.feedback.overallScore >= 70).length})
+              </button>
+              <button
+                onClick={() => setFilter('needs_work')}
+                className={`filter-pill ${filter === 'needs_work' ? 'bg-amber-500/20 border-amber-500 text-amber-300' : 'bg-surface-700/50 border-border-soft text-slate-400 hover:text-slate-200'}`}
+              >
+                Needs Work &lt; 70 ({resumes.filter(r => r.feedback.overallScore < 70).length})
+              </button>
+            </div>
           </div>
       )}
 
