@@ -1,7 +1,7 @@
 import {Link} from "react-router";
 import {useEffect, useState} from "react";
 import {usePuterStore} from "~/lib/puter";
-import ScoreCircle from "../../CVsense-main/app/Components/ScoreCircle";
+import ScoreCircle from "~/Components/ScoreCircle";
 
 const ResumeCard = ({ resume: { id, companyName, jobTitle, feedback, imagePath } }: { resume: Resume }) => {
     const { fs } = usePuterStore();

@@ -3,10 +3,9 @@
 // clicks "Download PDF Report", keeping the initial bundle lean.
 
 export async function exportElementToPdf(element: HTMLElement, fileName: string) {
-    const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
-        import("html2canvas"),
-        import("jspdf"),
-    ]);
+    // Only load these libraries on the client side to avoid SSR issues
+    const html2canvas = (await import("html2canvas")).default;
+    const { jsPDF } = await import("jspdf");
 
     const canvas = await html2canvas(element, {
         scale: 2,

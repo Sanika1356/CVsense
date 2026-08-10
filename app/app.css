@@ -211,11 +211,13 @@ form {
   }
 
   .skill-chip-matched {
-    @apply skill-chip bg-emerald-500/10 border-emerald-500/25 text-emerald-300;
+    @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium border transition-transform duration-200 hover:-translate-y-0.5;
+    @apply bg-emerald-500/10 border-emerald-500/25 text-emerald-300;
   }
 
   .skill-chip-missing {
-    @apply skill-chip bg-rose-500/10 border-rose-500/25 text-rose-300;
+    @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium border transition-transform duration-200 hover:-translate-y-0.5;
+    @apply bg-rose-500/10 border-rose-500/25 text-rose-300;
   }
 
   .dashboard-grid {
@@ -263,10 +265,10 @@ form {
     radial-gradient(50% 40% at 100% 20%, rgba(34, 211, 238, 0.12), transparent 60%),
     radial-gradient(40% 30% at 50% 100%, rgba(244, 114, 182, 0.08), transparent 60%);
   background-attachment: fixed;
-}
-
-@utility dashboard-bg::before {
-  content: "";
+  
+  &::before {
+    content: "";
+  }
 }
 
 @keyframes fadeIn {
