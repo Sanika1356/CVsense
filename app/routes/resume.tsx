@@ -89,6 +89,38 @@ const Resume = () => {
         if (!isLoading) loadResume();
     }, [id, isLoading]);
 
+    // Expand all accordion sections before printing, restore afterwards
+    useEffect(() => {
+        const expandedClass = '__print-expanded__';
+
+        const beforePrint = () => {
+            // Force all collapsed accordion content divs to be visible
+            document.querySelectorAll<HTMLElement>('[class*="max-h-0"]').forEach((el) => {
+                el.dataset[expandedClass] = '1';
+                el.style.maxHeight = 'none';
+                el.style.opacity = '1';
+                el.style.overflow = 'visible';
+            });
+        };
+
+        const afterPrint = () => {
+            // Remove the forced styles we added
+            document.querySelectorAll<HTMLElement>(`[data-${expandedClass}]`).forEach((el) => {
+                el.style.maxHeight = '';
+                el.style.opacity = '';
+                el.style.overflow = '';
+                delete el.dataset[expandedClass];
+            });
+        };
+
+        window.addEventListener('beforeprint', beforePrint);
+        window.addEventListener('afterprint', afterPrint);
+        return () => {
+            window.removeEventListener('beforeprint', beforePrint);
+            window.removeEventListener('afterprint', afterPrint);
+        };
+    }, []);
+
     const handleExportPdf = async () => {
         if (!reportRef.current || isExporting) return;
         setIsExporting(true);
@@ -101,6 +133,7 @@ const Resume = () => {
             setIsExporting(false);
         }
     }
+
 
     return (
         <main className="pt-0! dashboard-bg min-h-screen">
