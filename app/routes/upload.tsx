@@ -67,9 +67,30 @@ const Upload = () => {
                 throw new Error('AI analysis returned no response. The service might be busy. Please try again.');
             }
             console.log('AI feedback received successfully');
+            console.log('Raw AI feedback structure:', JSON.stringify(feedback, null, 2).slice(0, 500));
 
             setStatusText('Processing AI response...');
-            const feedbackText = getAIResponseText(feedback.message.content);
+            
+            // Handle different possible response shapes
+            let feedbackText: string;
+            try {
+                if (!feedback.message) {
+                    // Some models return the response directly as a string or object
+                    const raw = feedback as unknown;
+                    if (typeof raw === 'string') {
+                        feedbackText = raw;
+                    } else if (typeof raw === 'object' && raw !== null && 'content' in (raw as any)) {
+                        feedbackText = getAIResponseText((raw as any).content);
+                    } else {
+                        throw new Error('AI response missing expected message structure');
+                    }
+                } else {
+                    feedbackText = getAIResponseText(feedback.message.content);
+                }
+            } catch (parseErr) {
+                console.error('Failed to extract text from AI response:', parseErr, feedback);
+                throw new Error('Could not read the AI response. Please try again.');
+            }
             console.log('Extracted feedback text, parsing JSON...');
             
             const parsedFeedback = extractJsonFromText(feedbackText) as Feedback;
