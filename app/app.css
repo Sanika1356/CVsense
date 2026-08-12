@@ -106,6 +106,17 @@ form {
     @apply bg-linear-to-b from-white/10 to-white/0 p-[1.5px] rounded-2xl;
   }
 
+  /* Auth welcome card: gradient border with proper containment so children never overflow.
+     Styles written out directly to avoid @apply on a component-level class. */
+  .auth-card {
+    box-sizing: border-box;
+    overflow: hidden;
+    border-radius: 1rem;
+    padding: 1.5px;
+    background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  }
+
   .primary-button {
     @apply primary-gradient text-white rounded-full px-4 py-2.5 cursor-pointer w-full font-semibold
     transition-all duration-300 hover:shadow-[0_8px_30px_-6px_rgba(59,130,246,0.55)] hover:-translate-y-0.5
@@ -150,8 +161,9 @@ form {
   }
 
   .auth-button {
-    @apply primary-gradient rounded-full py-4 px-8 cursor-pointer w-150 max-md:w-full text-3xl font-semibold text-white
-    transition-all duration-300 hover:shadow-[0_10px_40px_-8px_rgba(59,130,246,0.6)] hover:-translate-y-0.5;
+    @apply primary-gradient rounded-full py-3.5 px-8 cursor-pointer w-full text-lg font-semibold text-white
+    transition-all duration-300 hover:shadow-[0_10px_40px_-8px_rgba(59,130,246,0.6)] hover:-translate-y-0.5
+    active:translate-y-0 disabled:opacity-70 disabled:cursor-wait;
   }
 
   .main-section {
