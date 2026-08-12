@@ -34,7 +34,7 @@ declare global {
             kv: {
                 get: (key: string) => Promise<string | null>;
                 set: (key: string, value: string) => Promise<boolean>;
-                delete: (key: string) => Promise<boolean>;
+                del: (key: string) => Promise<boolean>;
                 list: (pattern: string, returnValues?: boolean) => Promise<string[]>;
                 flush: () => Promise<boolean>;
             };
@@ -84,7 +84,7 @@ interface PuterStore {
     kv: {
         get: (key: string) => Promise<string | null | undefined>;
         set: (key: string, value: string) => Promise<boolean | undefined>;
-        delete: (key: string) => Promise<boolean | undefined>;
+        del: (key: string) => Promise<boolean | undefined>;
         list: (
             pattern: string,
             returnValues?: boolean
@@ -404,7 +404,8 @@ export const usePuterStore = create<PuterStore>((set, get) => {
             setError("Puter.js not available");
             return;
         }
-        return puter.kv.delete(key);
+        // Puter.js v2 exposes KV deletion as kv.del() (not kv.delete)
+        return puter.kv.del(key);
     };
 
     const listKV = async (pattern: string, returnValues?: boolean) => {
@@ -462,7 +463,7 @@ export const usePuterStore = create<PuterStore>((set, get) => {
         kv: {
             get: (key: string) => getKV(key),
             set: (key: string, value: string) => setKV(key, value),
-            delete: (key: string) => deleteKV(key),
+            del: (key: string) => deleteKV(key),
             list: (pattern: string, returnValues?: boolean) =>
                 listKV(pattern, returnValues),
             flush: () => flushKV(),

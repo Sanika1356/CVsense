@@ -67,7 +67,7 @@ const ResumeCard = ({
     setIsDeleting(true);
     setDeleteError(null);
     try {
-      await kv.delete(`resume:${id}`);
+      await kv.del(`resume:${id}`);
       /* Remove the associated resume image from storage to keep KV/fs consistent */
       try {
         await fs.delete(imagePath);
