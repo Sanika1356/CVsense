@@ -40,7 +40,7 @@ const FileUploader = ({ onFileSelect }: FileUploaderProps) => {
                     {file ? (
                         <div className="uploader-selected-file" onClick={(e) => e.stopPropagation()}>
                             <div className="flex items-center gap-3">
-                                <span className="flex size-10 items-center justify-center rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 shrink-0">
+                                <span className="flex size-10 items-center justify-center rounded-xl bg-accent-blue/10 border border-accent-blue/20 text-accent-blue shrink-0">
                                     <svg viewBox="0 0 24 24" fill="none" className="size-5" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M7 3.5H13.5L18 8V19.5C18 20.0523 17.5523 20.5 17 20.5H7C6.44772 20.5 6 20.0523 6 19.5V4.5C6 3.94772 6.44772 3.5 7 3.5Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
                                         <path d="M13 3.5V8H18" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />

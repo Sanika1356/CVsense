@@ -11,11 +11,11 @@ const Insights = ({
     <div className="panel flex flex-col gap-6 w-full p-6">
       {strengths.length > 0 && (
         <div className="flex flex-col gap-3">
-          <h3 className="text-lg font-semibold text-emerald-300 flex items-center gap-2">
+          <h3 className="text-lg font-semibold text-blue-300 flex items-center gap-2">
             <svg
               viewBox="0 0 24 24"
               fill="none"
-              className="size-5 text-emerald-400"
+              className="size-5 text-accent-blue"
               xmlns="http://www.w3.org/2000/svg"
             >
               <circle cx="12" cy="12" r="9" fill="currentColor" fillOpacity="0.12" />
@@ -33,7 +33,7 @@ const Insights = ({
             {strengths.map((strength, index) => (
               <li
                 key={index}
-                className="text-sm text-slate-300 bg-emerald-500/5 border border-emerald-500/20 rounded-lg p-3"
+                className="text-sm text-slate-300 bg-accent-blue/5 border border-accent-blue/20 rounded-lg p-3"
               >
                 {strength}
               </li>
@@ -44,11 +44,11 @@ const Insights = ({
 
       {weaknesses.length > 0 && (
         <div className="flex flex-col gap-3">
-          <h3 className="text-lg font-semibold text-rose-300 flex items-center gap-2">
+          <h3 className="text-lg font-semibold text-violet-300 flex items-center gap-2">
             <svg
               viewBox="0 0 24 24"
               fill="none"
-              className="size-5 text-rose-400"
+              className="size-5 text-accent-violet"
               xmlns="http://www.w3.org/2000/svg"
             >
               <circle cx="12" cy="12" r="9" fill="currentColor" fillOpacity="0.12" />
@@ -66,7 +66,7 @@ const Insights = ({
             {weaknesses.map((weakness, index) => (
               <li
                 key={index}
-                className="text-sm text-slate-300 bg-rose-500/5 border border-rose-500/20 rounded-lg p-3"
+                className="text-sm text-slate-300 bg-accent-violet/5 border border-accent-violet/20 rounded-lg p-3"
               >
                 {weakness}
               </li>
@@ -77,11 +77,11 @@ const Insights = ({
 
       {suggestions.length > 0 && (
         <div className="flex flex-col gap-3">
-          <h3 className="text-lg font-semibold text-amber-300 flex items-center gap-2">
+          <h3 className="text-lg font-semibold text-slate-200 flex items-center gap-2">
             <svg
               viewBox="0 0 24 24"
               fill="none"
-              className="size-5 text-amber-400"
+              className="size-5 text-accent-blue"
               xmlns="http://www.w3.org/2000/svg"
             >
               <circle cx="12" cy="12" r="9" fill="currentColor" fillOpacity="0.12" />
@@ -98,7 +98,7 @@ const Insights = ({
             {suggestions.map((suggestion, index) => (
               <li
                 key={index}
-                className="text-sm text-slate-300 bg-amber-500/5 border border-amber-500/20 rounded-lg p-3"
+                className="text-sm text-slate-300 bg-surface-700/40 border border-border-soft rounded-lg p-3"
               >
                 {suggestion}
               </li>

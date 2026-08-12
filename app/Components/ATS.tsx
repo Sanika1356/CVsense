@@ -11,14 +11,14 @@ interface ATSProps {
 }
 
 const CheckIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" className="size-4.5 shrink-0 mt-0.5" xmlns="http://www.w3.org/2000/svg">
+  <svg viewBox="0 0 24 24" fill="none" className="size-4.5 shrink-0 mt-0.5 text-accent-blue" xmlns="http://www.w3.org/2000/svg">
     <circle cx="12" cy="12" r="9" fill="currentColor" fillOpacity="0.15" />
     <path d="M8.5 12.5L10.75 14.75L15.5 9.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 );
 
 const WarnIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" className="size-4.5 shrink-0 mt-0.5" xmlns="http://www.w3.org/2000/svg">
+  <svg viewBox="0 0 24 24" fill="none" className="size-4.5 shrink-0 mt-0.5 text-accent-violet" xmlns="http://www.w3.org/2000/svg">
     <circle cx="12" cy="12" r="9" fill="currentColor" fillOpacity="0.15" />
     <path d="M12 8V13" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
     <circle cx="12" cy="16" r="0.9" fill="currentColor" />
@@ -29,9 +29,9 @@ const ATS: React.FC<ATSProps> = ({ score, suggestions }) => {
   const tone = score > 69 ? 'good' : score > 49 ? 'warn' : 'bad';
 
   const toneStyles = {
-    good: { ring: 'from-emerald-500/25', badge: 'bg-emerald-500/10 border-emerald-500/25 text-emerald-300', icon: 'text-emerald-400' },
-    warn: { ring: 'from-amber-500/25', badge: 'bg-amber-500/10 border-amber-500/25 text-amber-300', icon: 'text-amber-400' },
-    bad: { ring: 'from-rose-500/25', badge: 'bg-rose-500/10 border-rose-500/25 text-rose-300', icon: 'text-rose-400' },
+    good: { ring: 'from-accent-blue/25', badge: 'bg-accent-blue/10 border-accent-blue/25 text-blue-300', icon: 'text-accent-blue' },
+    warn: { ring: 'from-accent-violet/25', badge: 'bg-accent-violet/10 border-accent-violet/25 text-violet-300', icon: 'text-accent-violet' },
+    bad: { ring: 'from-slate-400/25', badge: 'bg-slate-500/10 border-slate-400/25 text-slate-300', icon: 'text-slate-400' },
   }[tone];
 
   const subtitle = score > 69 ? 'Great job!' : score > 49 ? 'Good start' : 'Needs improvement';
@@ -60,10 +60,8 @@ const ATS: React.FC<ATSProps> = ({ score, suggestions }) => {
       <div className="space-y-3">
         {suggestions.map((suggestion, index) => (
           <div key={index} className="flex items-start gap-3">
-            <span className={suggestion.type === "good" ? "text-emerald-400" : "text-amber-400"}>
-              {suggestion.type === "good" ? <CheckIcon /> : <WarnIcon />}
-            </span>
-            <p className={suggestion.type === "good" ? "text-emerald-300/90 text-sm" : "text-amber-300/90 text-sm"}>
+            {suggestion.type === "good" ? <CheckIcon /> : <WarnIcon />}
+            <p className={suggestion.type === "good" ? "text-blue-300/90 text-sm" : "text-violet-300/90 text-sm"}>
               {suggestion.tip}
             </p>
           </div>

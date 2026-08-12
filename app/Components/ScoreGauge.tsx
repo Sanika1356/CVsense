@@ -13,7 +13,7 @@ const ScoreGauge = ({ score = 75 }: { score: number }) => {
     }, []);
 
     const label = score > 69 ? "Strong" : score > 49 ? "Fair" : "Needs work";
-    const labelColor = score > 69 ? "text-emerald-400" : score > 49 ? "text-amber-400" : "text-rose-400";
+    const labelColor = score > 69 ? "text-violet-300" : score > 49 ? "text-accent-blue" : "text-slate-400";
 
     return (
         <div className="flex flex-col items-center">

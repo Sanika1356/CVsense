@@ -156,13 +156,13 @@ const Resume = () => {
                     {loadError ? (
                         <div className="panel p-8 flex flex-col gap-4 items-start animate-in fade-in duration-500">
                             <div className="flex flex-row gap-3 items-center">
-                                <svg viewBox="0 0 24 24" fill="none" className="size-8 text-rose-400 shrink-0" xmlns="http://www.w3.org/2000/svg">
+                                <svg viewBox="0 0 24 24" fill="none" className="size-8 text-accent-violet shrink-0" xmlns="http://www.w3.org/2000/svg">
                                     <circle cx="12" cy="12" r="9" fill="currentColor" fillOpacity="0.12" />
                                     <path d="M12 8V13" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
                                     <circle cx="12" cy="16" r="0.9" fill="currentColor" />
                                 </svg>
                                 <div>
-                                    <p className="text-rose-400 font-semibold text-lg">Failed to load analysis</p>
+                                    <p className="text-violet-300 font-semibold text-lg">Failed to load analysis</p>
                                     <p className="text-slate-400 text-sm mt-1">{loadError}</p>
                                 </div>
                             </div>

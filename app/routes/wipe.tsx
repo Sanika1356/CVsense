@@ -35,7 +35,7 @@ const WipeApp = () => {
     }
 
     if (error) {
-        return <div className="dashboard-bg min-h-screen flex items-center justify-center text-rose-400">Error {error}</div>;
+        return <div className="dashboard-bg min-h-screen flex items-center justify-center text-violet-300">Error {error}</div>;
     }
 
     return (
@@ -54,7 +54,7 @@ const WipeApp = () => {
             </div>
             <div>
                 <button
-                    className="secondary-button text-rose-300 border-rose-500/30 hover:bg-rose-500/10"
+                    className="secondary-button text-accent-violet border-accent-violet/30 hover:bg-accent-violet/10"
                     onClick={() => handleDelete()}
                 >
                     Wipe App Data

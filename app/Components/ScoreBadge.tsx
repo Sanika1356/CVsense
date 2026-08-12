@@ -2,23 +2,28 @@ interface ScoreBadgeProps {
   score: number;
 }
 
+/**
+ * Unified blue/violet status badge (no red/orange/green).
+ * "Strong" and "Good Start" share the violet family; "Needs Work" is a
+ * cooler, softer blue tone so status stays readable without traffic lights.
+ */
 const ScoreBadge: React.FC<ScoreBadgeProps> = ({ score }) => {
-  let badgeColor = '';
-  let badgeText = '';
-  let dotColor = '';
+  let badgeColor = "";
+  let badgeText = "";
+  let dotColor = "";
 
   if (score > 70) {
-    badgeColor = 'bg-badge-green text-badge-green-text border border-emerald-500/20';
-    badgeText = 'Strong';
-    dotColor = 'bg-emerald-400';
+    badgeColor = "bg-badge-base text-badge-base-text border border-accent-violet/20";
+    badgeText = "Strong";
+    dotColor = "bg-accent-violet";
   } else if (score > 49) {
-    badgeColor = 'bg-badge-yellow text-badge-yellow-text border border-amber-500/20';
-    badgeText = 'Good Start';
-    dotColor = 'bg-amber-400';
+    badgeColor = "bg-accent-blue/10 text-accent-blue border border-accent-blue/20";
+    badgeText = "Good Start";
+    dotColor = "bg-accent-blue";
   } else {
-    badgeColor = 'bg-badge-red text-badge-red-text border border-rose-500/20';
-    badgeText = 'Needs Work';
-    dotColor = 'bg-rose-400';
+    badgeColor = "bg-light-blue-100/60 text-slate-300 border border-white/15";
+    badgeText = "Needs Work";
+    dotColor = "bg-slate-400";
   }
 
   return (

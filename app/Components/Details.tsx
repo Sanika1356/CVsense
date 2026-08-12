@@ -6,32 +6,31 @@ import {
   AccordionItem,
 } from "./Accordion";
 
+/** Unified score badge within the blue/violet family (no traffic lights). */
+const scoreBadgeTone = (score: number): "base" | "attention" =>
+  score > 39 ? "base" : "attention";
+
 const ScoreBadge = ({ score }: { score: number }) => {
+  const tone = scoreBadgeTone(score);
   return (
       <div
           className={cn(
               "flex flex-row gap-1.5 items-center px-2.5 py-1 rounded-[96px] border",
-              score > 69
-                  ? "bg-badge-green border-emerald-500/20"
-                  : score > 39
-                      ? "bg-badge-yellow border-amber-500/20"
-                      : "bg-badge-red border-rose-500/20"
+              tone === "base"
+                  ? "bg-badge-base border-accent-violet/20"
+                  : "bg-badge-attention border-accent-blue/20"
           )}
       >
         <span
             className={cn(
                 "size-1.5 rounded-full",
-                score > 69 ? "bg-emerald-400" : score > 39 ? "bg-amber-400" : "bg-rose-400"
+                tone === "base" ? "bg-accent-violet" : "bg-accent-blue"
             )}
         />
         <p
             className={cn(
                 "text-sm font-medium font-mono",
-                score > 69
-                    ? "text-badge-green-text"
-                    : score > 39
-                        ? "text-badge-yellow-text"
-                        : "text-badge-red-text"
+                tone === "base" ? "text-badge-base-text" : "text-badge-attention-text"
             )}
         >
           {score}/100
@@ -56,14 +55,14 @@ const CategoryHeader = ({
 };
 
 const GoodIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" className="size-5 shrink-0 text-emerald-400" xmlns="http://www.w3.org/2000/svg">
+  <svg viewBox="0 0 24 24" fill="none" className="size-5 shrink-0 text-accent-blue" xmlns="http://www.w3.org/2000/svg">
     <circle cx="12" cy="12" r="9" fill="currentColor" fillOpacity="0.12" />
     <path d="M8.5 12.5L10.75 14.75L15.5 9.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 );
 
 const ImproveIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" className="size-5 shrink-0 text-amber-400" xmlns="http://www.w3.org/2000/svg">
+  <svg viewBox="0 0 24 24" fill="none" className="size-5 shrink-0 text-accent-violet" xmlns="http://www.w3.org/2000/svg">
     <circle cx="12" cy="12" r="9" fill="currentColor" fillOpacity="0.12" />
     <path d="M12 8V13" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
     <circle cx="12" cy="16" r="0.9" fill="currentColor" />
@@ -92,8 +91,8 @@ const CategoryContent = ({
                   className={cn(
                       "flex flex-col gap-2 rounded-2xl p-4 border",
                       tip.type === "good"
-                          ? "bg-emerald-500/5 border-emerald-500/20 text-emerald-300"
-                          : "bg-amber-500/5 border-amber-500/20 text-amber-300"
+                          ? "bg-accent-blue/5 border-accent-blue/20 text-blue-300"
+                          : "bg-accent-violet/5 border-accent-violet/20 text-violet-300"
                   )}
               >
                 <div className="flex flex-row gap-2 items-center">

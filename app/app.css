@@ -8,32 +8,34 @@
   "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --font-mono: "JetBrains Mono", ui-monospace, "Cascadia Code", monospace;
 
-  /* Surfaces */
+  /* Surfaces — deep navy */
   --color-dark-200: #94a3b8;
-  --color-bg-950: #06070c;
-  --color-bg-900: #0a0c14;
-  --color-surface-800: #11141d;
-  --color-surface-700: #171b27;
-  --color-surface-600: #1e2333;
-  --color-border-soft: rgba(255, 255, 255, 0.08);
-  --color-border-softer: rgba(255, 255, 255, 0.05);
+  --color-bg-950: #05070e;
+  --color-bg-900: #080b16;
+  --color-surface-800: #0e1224;
+  --color-surface-700: #131830;
+  --color-surface-600: #1b2140;
+
+  --color-border-soft: rgba(148, 163, 210, 0.10);
+  --color-border-softer: rgba(148, 163, 210, 0.06);
 
   /* Accents */
   --color-accent-violet: #8b5cf6;
+  --color-accent-blue: #3b82f6;
   --color-accent-cyan: #22d3ee;
   --color-accent-pink: #f472b6;
 
   --color-light-blue-100: #c1d3f81a;
   --color-light-blue-200: #a7bff14d;
 
-  /* Semantic badges (dark-tuned) */
-  --color-badge-green: rgba(52, 211, 153, 0.12);
-  --color-badge-red: rgba(251, 113, 133, 0.12);
-  --color-badge-yellow: rgba(251, 191, 36, 0.12);
+  /* Unified status system — blue/violet family only.
+     "good" is the neutral/positive baseline; "needs attention" is a softer,
+     cooler violet tone. No red/orange/yellow/green anywhere. */
+  --color-badge-base: rgba(139, 92, 246, 0.12);
+  --color-badge-attention: rgba(96, 165, 250, 0.12);
 
-  --color-badge-green-text: #6ee7b7;
-  --color-badge-red-text: #fda4af;
-  --color-badge-yellow-text: #fcd34d;
+  --color-badge-base-text: #c4b5fd;
+  --color-badge-attention-text: #93c5fd;
 }
 
 html,
@@ -88,16 +90,16 @@ form {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.25);
+  background: rgba(148, 163, 210, 0.25);
   border-radius: 999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(148, 163, 184, 0.4);
+  background: rgba(148, 163, 210, 0.4);
 }
 
 @layer components {
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-linear-to-r from-accent-violet via-fuchsia-400 to-accent-cyan;
+    @apply bg-clip-text text-transparent bg-linear-to-r from-accent-blue via-accent-violet to-accent-cyan;
   }
 
   .gradient-border {
@@ -106,7 +108,7 @@ form {
 
   .primary-button {
     @apply primary-gradient text-white rounded-full px-4 py-2.5 cursor-pointer w-full font-semibold
-    transition-all duration-300 hover:shadow-[0_8px_30px_-6px_rgba(139,92,246,0.55)] hover:-translate-y-0.5
+    transition-all duration-300 hover:shadow-[0_8px_30px_-6px_rgba(59,130,246,0.55)] hover:-translate-y-0.5
     active:translate-y-0 flex items-center justify-center gap-2;
   }
 
@@ -119,6 +121,14 @@ form {
   .icon-button {
     @apply flex items-center justify-center rounded-full size-9 border border-border-soft bg-surface-700/60
     text-slate-300 transition-all duration-200 hover:text-white hover:border-white/20 hover:bg-surface-600/70 cursor-pointer;
+  }
+
+  /* Delete-action button: subtle blue/violet, destructive tint only when active/hovered */
+  .delete-button {
+    @apply absolute top-3 right-3 z-10 flex items-center justify-center rounded-full size-8
+    border border-border-soft bg-surface-800/90 backdrop-blur-sm text-slate-400
+    opacity-0 translate-y-[-4px] transition-all duration-300 ease-out
+    hover:text-violet-300 hover:border-accent-violet/40 hover:bg-accent-violet/10 hover:shadow-[0_4px_20px_-6px_rgba(139,92,246,0.45)];
   }
 
   .resume-nav {
@@ -141,7 +151,7 @@ form {
 
   .auth-button {
     @apply primary-gradient rounded-full py-4 px-8 cursor-pointer w-150 max-md:w-full text-3xl font-semibold text-white
-    transition-all duration-300 hover:shadow-[0_10px_40px_-8px_rgba(139,92,246,0.6)] hover:-translate-y-0.5;
+    transition-all duration-300 hover:shadow-[0_10px_40px_-8px_rgba(59,130,246,0.6)] hover:-translate-y-0.5;
   }
 
   .main-section {
@@ -159,7 +169,7 @@ form {
   .resume-card {
     @apply flex flex-col gap-6 h-140 w-full lg:w-112.5 xl:w-122.5 bg-surface-800/70 border border-border-soft
     backdrop-blur-sm rounded-2xl p-4 transition-all duration-300 relative overflow-hidden
-    hover:-translate-y-1.5 hover:border-white/20 hover:shadow-[0_20px_50px_-15px_rgba(139,92,246,0.35)];
+    hover:-translate-y-1.5 hover:border-accent-blue/25 hover:shadow-[0_20px_50px_-15px_rgba(59,130,246,0.35)];
   }
 
   .resume-card-header {
@@ -199,7 +209,7 @@ form {
   }
 
   .panel-hover {
-    @apply hover:border-white/15 hover:-translate-y-0.5;
+    @apply hover:border-accent-blue/20 hover:-translate-y-0.5;
   }
 
   .stat-pill {
@@ -212,12 +222,23 @@ form {
 
   .skill-chip-matched {
     @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium border transition-transform duration-200 hover:-translate-y-0.5;
-    @apply bg-emerald-500/10 border-emerald-500/25 text-emerald-300;
+    @apply bg-accent-violet/10 border-accent-violet/25 text-violet-300;
   }
 
   .skill-chip-missing {
     @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium border transition-transform duration-200 hover:-translate-y-0.5;
-    @apply bg-rose-500/10 border-rose-500/25 text-rose-300;
+    @apply bg-accent-blue/10 border-accent-blue/25 text-blue-300;
+  }
+
+  /* Unified status pill inside the report (replaces red/orange/green) */
+  .status-pill-base {
+    @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 border text-[11px] font-medium
+    bg-badge-base border-accent-violet/25 text-badge-base-text;
+  }
+
+  .status-pill-attention {
+    @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 border text-[11px] font-medium
+    bg-badge-attention border-accent-blue/25 text-badge-attention-text;
   }
 
   .dashboard-grid {
@@ -225,16 +246,39 @@ form {
   }
 
   .section-eyebrow {
-    @apply text-xs font-mono uppercase tracking-[0.2em] text-accent-cyan/80;
+    @apply text-xs font-mono uppercase tracking-[0.2em] text-accent-blue/80;
+  }
+
+  /* Confirm dialog overlay & panel */
+  .dialog-overlay {
+    @apply fixed inset-0 z-50 flex items-center justify-center p-4
+    bg-bg-950/75 backdrop-blur-sm animate-in fade-in duration-200;
+  }
+
+  .dialog-panel {
+    @apply w-full max-w-sm bg-surface-800 border border-border-soft rounded-2xl p-6
+    shadow-[0_30px_80px_-20px_rgba(0,0,0,0.8)] animate-in zoom-in-95 fade-in duration-200;
+  }
+
+  .dialog-button-cancel {
+    @apply flex items-center justify-center gap-2 rounded-full px-4 py-2.5 font-semibold cursor-pointer
+    border border-border-soft bg-surface-700/70 text-slate-200 transition-all duration-200
+    hover:bg-surface-600/70 hover:border-white/20;
+  }
+
+  .dialog-button-delete {
+    @apply flex items-center justify-center gap-2 rounded-full px-4 py-2.5 font-semibold cursor-pointer
+    bg-accent-violet/15 border border-accent-violet/40 text-violet-200 transition-all duration-200
+    hover:bg-accent-violet/25 hover:border-accent-violet/60 disabled:opacity-50 disabled:cursor-wait;
   }
 }
 
 @utility bg-gradient {
-  background: linear-gradient(to bottom, #0a0c14 60%, #171025);
+  background: linear-gradient(to bottom, #080b16 60%, #100e22);
 }
 
 @utility text-gradient {
-  @apply bg-clip-text text-transparent bg-linear-to-r from-accent-violet via-fuchsia-400 to-accent-cyan;
+  @apply bg-clip-text text-transparent bg-linear-to-r from-accent-blue via-accent-violet to-accent-cyan;
 }
 
 @utility gradient-hover {
@@ -242,16 +286,16 @@ form {
 }
 
 @utility primary-gradient {
-  background: linear-gradient(135deg, #8b5cf6, #6366f1 55%, #22d3ee);
-  box-shadow: 0px 12px 30px -10px rgba(99, 102, 241, 0.5);
+  background: linear-gradient(135deg, #3b82f6, #6366f1 55%, #8b5cf6);
+  box-shadow: 0px 12px 30px -10px rgba(59, 130, 246, 0.5);
 }
 
 @utility primary-gradient-hover {
-  background: linear-gradient(135deg, #7c3aed, #4f46e5 55%, #06b6d4);
+  background: linear-gradient(135deg, #2563eb, #4f46e5 55%, #7c3aed);
 }
 
 @utility inset-shadow {
-  box-shadow: inset 0 0 24px 0 rgba(139, 92, 246, 0.12);
+  box-shadow: inset 0 0 24px 0 rgba(59, 130, 246, 0.12);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
 }
@@ -259,11 +303,11 @@ form {
 /* Ambient "scanner" backdrop used behind the main app screens */
 @utility dashboard-bg {
   position: relative;
-  background-color: #06070c;
+  background-color: #05070e;
   background-image:
-    radial-gradient(60% 50% at 15% 0%, rgba(139, 92, 246, 0.16), transparent 60%),
-    radial-gradient(50% 40% at 100% 20%, rgba(34, 211, 238, 0.12), transparent 60%),
-    radial-gradient(40% 30% at 50% 100%, rgba(244, 114, 182, 0.08), transparent 60%);
+    radial-gradient(60% 50% at 15% 0%, rgba(59, 130, 246, 0.16), transparent 60%),
+    radial-gradient(50% 40% at 100% 20%, rgba(139, 92, 246, 0.12), transparent 60%),
+    radial-gradient(40% 30% at 50% 100%, rgba(96, 165, 250, 0.08), transparent 60%);
   background-attachment: fixed;
   
   &::before {
@@ -319,7 +363,7 @@ form {
   left: 0;
   width: 40%;
   height: 2px;
-  background: linear-gradient(90deg, transparent, #22d3ee, transparent);
+  background: linear-gradient(90deg, transparent, #8b5cf6, transparent);
   animation: scanline 2.8s ease-in-out infinite;
   opacity: 0.8;
 }
@@ -432,5 +476,3 @@ form {
     transition: none !important;
   }
 }
-
-

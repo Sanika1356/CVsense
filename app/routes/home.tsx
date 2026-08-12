@@ -41,6 +41,10 @@ export default function Home() {
     loadResumes()
   }, []);
 
+  const handleResumeDeleted = (deletedId: string) => {
+    setResumes((prev) => prev.filter((r) => r.id !== deletedId));
+  };
+
   const filteredResumes = useMemo(() => {
     if (!query.trim()) return resumes;
     const q = query.toLowerCase();
@@ -92,7 +96,7 @@ export default function Home() {
       {!loadingResumes && filteredResumes.length > 0 && (
         <div className="resumes-section">
           {filteredResumes.map((resume) => (
-              <ResumeCard key={resume.id} resume={resume} />
+              <ResumeCard key={resume.id} resume={resume} onDelete={() => handleResumeDeleted(resume.id)} />
           ))}
         </div>
       )}

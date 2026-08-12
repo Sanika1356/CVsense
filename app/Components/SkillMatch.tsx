@@ -6,10 +6,10 @@ interface SkillMatchProps {
 
 const SkillMatch = ({ matchPercentage, matchedSkills, missingSkills }: SkillMatchProps) => {
     const tone =
-        matchPercentage > 69 ? "emerald" : matchPercentage > 49 ? "amber" : "rose";
+        matchPercentage > 69 ? "violet" : matchPercentage > 49 ? "blue" : "slate";
 
     const barColor =
-        tone === "emerald" ? "from-emerald-500 to-cyan-400" : tone === "amber" ? "from-amber-500 to-orange-400" : "from-rose-500 to-pink-400";
+        tone === "violet" ? "from-accent-blue to-accent-violet" : tone === "blue" ? "from-accent-blue to-blue-400" : "from-slate-500 to-slate-400";
 
     return (
         <div className="panel panel-hover w-full p-6">
@@ -37,7 +37,7 @@ const SkillMatch = ({ matchPercentage, matchedSkills, missingSkills }: SkillMatc
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
-                    <p className="text-xs font-semibold uppercase tracking-wider text-emerald-400 mb-2.5 flex items-center gap-1.5">
+                    <p className="text-xs font-semibold uppercase tracking-wider text-violet-300 mb-2.5 flex items-center gap-1.5">
                         <svg viewBox="0 0 24 24" fill="none" className="size-3.5" xmlns="http://www.w3.org/2000/svg">
                             <path d="M5 13L9 17L19 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
@@ -52,11 +52,11 @@ const SkillMatch = ({ matchPercentage, matchedSkills, missingSkills }: SkillMatc
                     </div>
                 </div>
                 <div>
-                    <p className="text-xs font-semibold uppercase tracking-wider text-rose-400 mb-2.5 flex items-center gap-1.5">
+                    <p className="text-xs font-semibold uppercase tracking-wider text-blue-300 mb-2.5 flex items-center gap-1.5">
                         <svg viewBox="0 0 24 24" fill="none" className="size-3.5" xmlns="http://www.w3.org/2000/svg">
                             <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
                         </svg>
-                        Missing skills
+                        Skills to add
                     </p>
                     <div className="flex flex-wrap gap-2">
                         {missingSkills.length > 0 ? missingSkills.map((skill, i) => (

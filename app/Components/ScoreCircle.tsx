@@ -7,7 +7,7 @@ const ScoreCircle = ({ score = 75 }: { score: number }) => {
     const strokeDashoffset = circumference * (1 - progress);
 
     const trackColor =
-        score > 69 ? "#34d399" : score > 49 ? "#fbbf24" : "#fb7185";
+        score > 69 ? "#a78bfa" : score > 49 ? "#60a5fa" : "#94a3b8";
 
     return (
         <div className="relative w-25 h-25">

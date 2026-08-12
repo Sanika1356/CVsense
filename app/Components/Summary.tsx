@@ -2,9 +2,9 @@ import ScoreBadge from "./ScoreBadge";
 import ScoreGauge from "./ScoreGauge";
 
 const Category = ({ title, score }: { title: string, score: number }) => {
-    const textColor = score > 70 ? 'text-emerald-400'
+    const textColor = score > 70 ? 'text-violet-300'
             : score > 49
-        ? 'text-amber-400' : 'text-rose-400';
+        ? 'text-accent-blue' : 'text-slate-400';
 
     return (
         <div className="resume-summary">

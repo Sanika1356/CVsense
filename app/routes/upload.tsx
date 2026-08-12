@@ -144,7 +144,7 @@ const Upload = () => {
                     <h1>Smart feedback for your dream job</h1>
                     {isProcessing ? (
                         <>
-                            <h2 className={statusText.startsWith('Error:') ? 'text-rose-400 font-semibold' : ''}>{statusText}</h2>
+                            <h2 className={statusText.startsWith('Error:') ? 'text-violet-300 font-semibold' : ''}>{statusText}</h2>
                             {!statusText.startsWith('Error:') && (
                                 <div className="w-full max-w-md flex flex-col items-center gap-4">
                                     <img src="/images/resume-scan.gif" className="w-full rounded-2xl border border-border-soft" alt="Analyzing..." />
