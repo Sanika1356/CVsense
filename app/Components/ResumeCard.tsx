@@ -27,6 +27,7 @@ const ResumeCard = ({
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     let url: string | undefined;
@@ -93,6 +94,8 @@ const ResumeCard = ({
         to={`/resume/${id}`}
         className="resume-card group animate-in fade-in duration-700"
         aria-label={`${companyName ?? "Resume"} analysis — ${jobTitle ?? "view details"}`}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
       >
         {/* Delete action — hidden until hover (desktop) or always subtle (touch) */}
         <button
@@ -100,7 +103,9 @@ const ResumeCard = ({
           aria-label="Delete analysis"
           title="Delete analysis"
           onClick={handleRequestDelete}
-          className={`delete-button ${isTouchDevice ? "opacity-60 translate-y-0" : ""}`}
+          className={`delete-button ${
+            isTouchDevice || isHovered ? "opacity-100 translate-y-0" : ""
+          }`}
         >
           <svg viewBox="0 0 24 24" fill="none" className="size-4" xmlns="http://www.w3.org/2000/svg">
             <path
