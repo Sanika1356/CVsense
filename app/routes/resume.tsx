@@ -1,11 +1,7 @@
 import {Link, useNavigate, useParams} from "react-router";
 import {useEffect, useRef, useState} from "react";
 import {usePuterStore} from "~/lib/puter";
-import Summary from "~/Components/Summary";
-import ATS from "~/Components/ATS";
-import Details from "~/Components/Details";
-import SkillMatch from "~/Components/SkillMatch";
-import Insights from "~/Components/Insights";
+import ReportView from "~/Components/ReportView";
 import { exportElementToPdf } from "~/lib/pdfExport";
 
 
@@ -21,6 +17,7 @@ const Resume = () => {
     const [resumeUrl, setResumeUrl] = useState('');
     const [feedback, setFeedback] = useState<Feedback | null>(null);
     const [companyName, setCompanyName] = useState('');
+    const [jobTitle, setJobTitle] = useState('');
     const [isExporting, setIsExporting] = useState(false);
     const [loadError, setLoadError] = useState<string | null>(null);
     const reportRef = useRef<HTMLDivElement>(null);
@@ -70,6 +67,7 @@ const Resume = () => {
                 }
 
                 setCompanyName(data.companyName || '');
+                setJobTitle(data.jobTitle || '');
 
                 // Validate feedback before setting it
                 if (data.feedback && typeof data.feedback === 'object' && typeof data.feedback.overallScore === 'number') {
@@ -89,43 +87,11 @@ const Resume = () => {
         if (!isLoading) loadResume();
     }, [id, isLoading]);
 
-    // Expand all accordion sections before printing, restore afterwards
-    useEffect(() => {
-        const expandedClass = '__print-expanded__';
-
-        const beforePrint = () => {
-            // Force all collapsed accordion content divs to be visible
-            document.querySelectorAll<HTMLElement>('[class*="max-h-0"]').forEach((el) => {
-                el.dataset[expandedClass] = '1';
-                el.style.maxHeight = 'none';
-                el.style.opacity = '1';
-                el.style.overflow = 'visible';
-            });
-        };
-
-        const afterPrint = () => {
-            // Remove the forced styles we added
-            document.querySelectorAll<HTMLElement>(`[data-${expandedClass}]`).forEach((el) => {
-                el.style.maxHeight = '';
-                el.style.opacity = '';
-                el.style.overflow = '';
-                delete el.dataset[expandedClass];
-            });
-        };
-
-        window.addEventListener('beforeprint', beforePrint);
-        window.addEventListener('afterprint', afterPrint);
-        return () => {
-            window.removeEventListener('beforeprint', beforePrint);
-            window.removeEventListener('afterprint', afterPrint);
-        };
-    }, []);
-
     const handleExportPdf = async () => {
         if (!reportRef.current || isExporting) return;
         setIsExporting(true);
         try {
-            const fileSafeName = (companyName || 'resume').replace(/[^a-z0-9]+/gi, '-').toLowerCase();
+            const fileSafeName = (companyName || jobTitle || 'resume').replace(/[^a-z0-9]+/gi, '-').toLowerCase();
             await exportElementToPdf(reportRef.current, `cvsense-report-${fileSafeName || id}.pdf`);
         } catch (err) {
             console.error('Failed to export PDF:', err);
@@ -186,7 +152,7 @@ const Resume = () => {
                     )}
                 </section>
                 <section className="feedback-section">
-                    <h2 className="text-4xl text-slate-100! font-bold">Resume Review</h2>
+                    <h2 className="text-4xl text-slate-100! font-bold no-print mb-4">Resume Review</h2>
                     {loadError ? (
                         <div className="panel p-8 flex flex-col gap-4 items-start animate-in fade-in duration-500">
                             <div className="flex flex-row gap-3 items-center">
@@ -203,24 +169,8 @@ const Resume = () => {
                             <Link to="/upload" className="primary-button mt-2">Try Again</Link>
                         </div>
                     ) : feedback ? (
-                        <div ref={reportRef} className="flex flex-col gap-6 animate-in fade-in duration-1000 bg-bg-950 p-1 rounded-2xl">
-                            <Summary feedback={feedback} />
-                            <ATS score={feedback.ATS.score || 0} suggestions={feedback.ATS.tips || []} />
-                            {feedback.skillMatch && (
-                                <SkillMatch
-                                    matchPercentage={feedback.skillMatch.matchPercentage}
-                                    matchedSkills={feedback.skillMatch.matchedSkills}
-                                    missingSkills={feedback.skillMatch.missingSkills}
-                                />
-                            )}
-                            {(feedback.strengths || feedback.weaknesses || feedback.suggestions) && (
-                                <Insights
-                                    strengths={feedback.strengths || []}
-                                    weaknesses={feedback.weaknesses || []}
-                                    suggestions={feedback.suggestions || []}
-                                />
-                            )}
-                            <Details feedback={feedback} />
+                        <div ref={reportRef} className="animate-in fade-in duration-700 w-full">
+                            <ReportView feedback={feedback} companyName={companyName} jobTitle={jobTitle} />
                         </div>
                     ) : (
                         <img src="/images/resume-scan-2.gif" className="w-full rounded-2xl" />

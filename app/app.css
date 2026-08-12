@@ -335,115 +335,102 @@ form {
 /* ============================================================
    PRINT / SAVE AS PDF STYLES
    Applied when the user clicks "Download PDF Report".
-   The browser's print dialog lets them save directly as PDF.
    ============================================================ */
 @media print {
-  /* --- Hide everything except the report --- */
+  /* --- Page setup --- */
+  @page {
+    size: A4 portrait;
+    margin: 12mm 14mm 14mm 14mm;
+  }
+
+  /* --- Hide UI navigation & non-printable elements --- */
   .no-print,
+  nav,
+  button,
   .feedback-section:first-of-type {
     display: none !important;
   }
 
-  /* --- Page setup --- */
-  @page {
-    size: A4 portrait;
-    margin: 16mm 14mm;
-  }
-
   html, body {
-    background: #06070c !important;
+    background: #f8fafc !important;
+    color: #0f172a !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
     color-adjust: exact !important;
-    font-size: 12px;
+    font-size: 11.5px;
+    line-height: 1.5;
   }
 
-  /* --- Force the report section to fill the page --- */
   main {
     padding: 0 !important;
+    margin: 0 !important;
     min-height: unset !important;
+    background: transparent !important;
   }
 
+  .dashboard-bg,
   .dashboard-bg::before,
   .dashboard-bg::after {
-    display: none !important;
+    background: none !important;
+    background-image: none !important;
   }
 
-  /* The outer flex row: only show the report column */
+  /* Structural Containers */
   .flex.flex-row.w-full {
     display: block !important;
   }
 
-  /* The right feedback section (the report) */
   .feedback-section:last-of-type {
     display: block !important;
     width: 100% !important;
     padding: 0 !important;
+    margin: 0 !important;
     height: auto !important;
     position: static !important;
   }
 
-  /* --- Typography & colour overrides --- */
+  /* Ensure text colors print accurately */
   h1, h2, h3, h4, h5, h6,
-  p, span, li, div {
-    color-adjust: exact !important;
+  p, span, li, div, td, th {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
 
-  /* Headline */
-  h2 {
-    font-size: 22px !important;
-    margin-bottom: 12px !important;
+  /* Prevent page breaks inside cards/sections */
+  .panel,
+  .pdf-break-inside-avoid,
+  section,
+  .report-header,
+  .report-footer {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
   }
 
-  /* --- Panel cards --- */
+  /* Prevent orphan headings */
+  h1, h2, h3, h4, .section-eyebrow {
+    break-after: avoid !important;
+    page-break-after: avoid !important;
+  }
+
+  /* Report Panel Styles for Print */
   .panel {
-    border: 1px solid rgba(255,255,255,0.08) !important;
+    border: 1px solid #e2e8f0 !important;
     border-radius: 12px !important;
-    background: #0a0c14 !important;
-    break-inside: avoid;
-    page-break-inside: avoid;
-    margin-bottom: 12px !important;
+    background: #ffffff !important;
+    box-shadow: none !important;
+    margin-bottom: 14px !important;
   }
 
-  /* --- Score gauge & badges --- */
-  .score-gauge,
-  [class*="score"] {
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
+  /* Remove browser print header/footer artifacts */
+  img[src*=".gif"] {
+    display: none !important;
   }
 
-  /* --- Accordion: force all content visible when printing --- */
-  [data-state="closed"] > div,
-  [hidden] {
-    display: block !important;
-    height: auto !important;
-    overflow: visible !important;
-    opacity: 1 !important;
-  }
-
-  /* --- Remove animations --- */
+  /* Disable animations and transitions in print */
   *, *::before, *::after {
     animation: none !important;
     transition: none !important;
   }
-
-  /* --- Page-break hints for multi-page PDFs --- */
-  .panel {
-    break-inside: avoid;
-    page-break-inside: avoid;
-  }
-
-  /* --- Remove gradient borders that don't print well --- */
-  .gradient-border {
-    border: 1px solid rgba(139, 92, 246, 0.4) !important;
-    background: none !important;
-  }
-
-  /* Hide the resume GIF/image placeholder */
-  img[src*=".gif"] {
-    display: none !important;
-  }
 }
+
 

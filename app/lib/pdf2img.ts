@@ -15,7 +15,7 @@ async function loadPdfJs(): Promise<any> {
     isLoading = true;
     loadPromise = (async () => {
         try {
-            // @ts-expect-error - pdfjs-dist is not a module
+            // @ts-ignore - pdfjs-dist is not a module
             const lib = await import("pdfjs-dist");
             // Use a CDN for the worker to ensure it matches the library version exactly
             // and is always accessible.

@@ -6,6 +6,7 @@ interface AccordionContextType {
     activeItems: string[];
     toggleItem: (id: string) => void;
     isItemActive: (id: string) => boolean;
+    forceOpen?: boolean;
 }
 
 const AccordionContext = createContext<AccordionContextType | undefined>(
@@ -25,19 +26,23 @@ interface AccordionProps {
     defaultOpen?: string;
     allowMultiple?: boolean;
     className?: string;
+    /** When true every item is forced open — used for PDF printing */
+    forceOpen?: boolean;
 }
 
 export const Accordion: React.FC<AccordionProps> = ({
-                                                        children,
-                                                        defaultOpen,
-                                                        allowMultiple = false,
-                                                        className = "",
-                                                    }) => {
+    children,
+    defaultOpen,
+    allowMultiple = false,
+    className = "",
+    forceOpen = false,
+}) => {
     const [activeItems, setActiveItems] = useState<string[]>(
         defaultOpen ? [defaultOpen] : []
     );
 
     const toggleItem = (id: string) => {
+        if (forceOpen) return; // don't allow collapsing while printing
         setActiveItems((prev) => {
             if (allowMultiple) {
                 return prev.includes(id)
@@ -49,11 +54,11 @@ export const Accordion: React.FC<AccordionProps> = ({
         });
     };
 
-    const isItemActive = (id: string) => activeItems.includes(id);
+    const isItemActive = (id: string) => forceOpen || activeItems.includes(id);
 
     return (
         <AccordionContext.Provider
-            value={{ activeItems, toggleItem, isItemActive }}
+            value={{ activeItems, toggleItem, isItemActive, forceOpen }}
         >
             <div className={`space-y-2 ${className}`}>{children}</div>
         </AccordionContext.Provider>
@@ -67,10 +72,10 @@ interface AccordionItemProps {
 }
 
 export const AccordionItem: React.FC<AccordionItemProps> = ({
-                                                                id,
-                                                                children,
-                                                                className = "",
-                                                            }) => {
+    id,
+    children,
+    className = "",
+}) => {
     return (
         <div className={`overflow-hidden border-b border-border-softer last:border-b-0 ${className}`}>
             {children}
@@ -87,19 +92,20 @@ interface AccordionHeaderProps {
 }
 
 export const AccordionHeader: React.FC<AccordionHeaderProps> = ({
-                                                                    itemId,
-                                                                    children,
-                                                                    className = "",
-                                                                    icon,
-                                                                    iconPosition = "right",
-                                                                }) => {
-    const { toggleItem, isItemActive } = useAccordion();
+    itemId,
+    children,
+    className = "",
+    icon,
+    iconPosition = "right",
+}) => {
+    const { toggleItem, isItemActive, forceOpen } = useAccordion();
     const isActive = isItemActive(itemId);
 
     const defaultIcon = (
         <svg
             className={cn("w-5 h-5 transition-transform duration-300 text-slate-500", {
                 "rotate-180 text-accent-cyan": isActive,
+                "opacity-0": forceOpen, // hide chevron when printing
             })}
             fill="none"
             stroke="currentColor"
@@ -146,10 +152,10 @@ interface AccordionContentProps {
 }
 
 export const AccordionContent: React.FC<AccordionContentProps> = ({
-                                                                    itemId,
-                                                                    children,
-                                                                    className = "",
-                                                                }) => {
+    itemId,
+    children,
+    className = "",
+}) => {
     const { isItemActive } = useAccordion();
     const isActive = isItemActive(itemId);
 
