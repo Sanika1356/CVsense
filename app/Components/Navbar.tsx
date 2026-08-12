@@ -39,6 +39,12 @@ const Navbar = () => {
 
         return (
             <div className="flex flex-row items-center gap-3">
+                <Link to="/upload" className="primary-button w-fit text-sm px-5">
+                    <svg viewBox="0 0 24 24" fill="none" className="size-4" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 4V20M4 12H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                    </svg>
+                    Upload Resume
+                </Link>
                 <button
                     type="button"
                     onClick={handleLogout}
@@ -49,12 +55,6 @@ const Navbar = () => {
                     <LogoutIcon />
                     {isSigningOut ? "Logging out..." : "Logout"}
                 </button>
-                <Link to="/upload" className="primary-button w-fit text-sm px-5">
-                    <svg viewBox="0 0 24 24" fill="none" className="size-4" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 4V20M4 12H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                    </svg>
-                    Upload Resume
-                </Link>
             </div>
         );
     };
