@@ -1,8 +1,7 @@
 import type { Route } from "./+types/home";
-
-import {usePuterStore} from "~/lib/puter";
-import {Link, useNavigate} from "react-router";
-import {useEffect, useMemo, useState} from "react";
+import { usePuterStore } from "~/lib/puter";
+import { Link, useNavigate } from "react-router";
+import { useEffect, useMemo, useState } from "react";
 import Navbar from "~/Components/Navbar";
 import ResumeCard from "~/Components/ResumeCard";
 
@@ -21,105 +20,86 @@ export default function Home() {
   const [query, setQuery] = useState("");
 
   useEffect(() => {
-    if(!auth.isAuthenticated) navigate('/auth?next=/');
-  }, [auth.isAuthenticated])
+    if (!auth.isAuthenticated) navigate("/auth?next=/");
+  }, [auth.isAuthenticated, navigate]);
 
   useEffect(() => {
     const loadResumes = async () => {
       setLoadingResumes(true);
+      try {
+        const records = await kv.list("resume:*", true) as KVItem[] | undefined;
+        const parsedResumes = records?.flatMap((record) => {
+          try { return [JSON.parse(record.value) as Resume]; } catch { return []; }
+        });
+        setResumes(parsedResumes || []);
+      } finally {
+        setLoadingResumes(false);
+      }
+    };
 
-      const resumes = (await kv.list('resume:*', true)) as KVItem[];
-
-      const parsedResumes = resumes?.map((resume) => (
-          JSON.parse(resume.value) as Resume
-      ))
-
-      setResumes(parsedResumes || []);
-      setLoadingResumes(false);
-    }
-
-    loadResumes()
-  }, []);
+    if (auth.isAuthenticated) loadResumes();
+  }, [auth.isAuthenticated, kv]);
 
   const handleResumeDeleted = (deletedId: string) => {
-    setResumes((prev) => prev.filter((r) => r.id !== deletedId));
+    setResumes((previous) => previous.filter((resume) => resume.id !== deletedId));
   };
 
   const filteredResumes = useMemo(() => {
     if (!query.trim()) return resumes;
-    const q = query.toLowerCase();
-    return resumes.filter((r) =>
-        r.companyName?.toLowerCase().includes(q) ||
-        r.jobTitle?.toLowerCase().includes(q)
-    );
+    const normalizedQuery = query.toLowerCase();
+    return resumes.filter((resume) => [resume.companyName, resume.jobTitle].some((value) => value?.toLowerCase().includes(normalizedQuery)));
   }, [resumes, query]);
 
-  return <main className="dashboard-bg">
-    <Navbar />
+  const completedCount = resumes.filter((resume) => resume.feedback).length;
 
-    <section className="main-section">
-      <div className="page-heading py-16">
-        <span className="section-eyebrow flex items-center gap-2">
-          <span className="size-1.5 rounded-full bg-accent-cyan pulse-glow" />
-          Resume History
-        </span>
-        <h1>Track Your Applications & Resume Ratings</h1>
-        {!loadingResumes && resumes?.length === 0 ? (
-            <h2>No resumes found. Upload your first resume to get feedback.</h2>
-        ): (
-          <h2>Review your past submissions and revisit your AI-powered feedback anytime.</h2>
-        )}
-      </div>
-
-      {!loadingResumes && resumes.length > 0 && (
-          <div className="w-full max-w-md relative">
-            <svg viewBox="0 0 24 24" fill="none" className="size-4.5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="1.6" />
-              <path d="M21 21L16.5 16.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-            </svg>
-            <input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search by company or job title..."
-                className="pl-11"
-            />
-          </div>
-      )}
-
-      {loadingResumes && (
-          <div className="flex flex-col items-center justify-center gap-4">
-            <img src="/images/resume-scan-2.gif" className="w-50 rounded-2xl" />
-            <p className="text-sm text-slate-500 font-mono animate-pulse">Loading your resume history…</p>
-          </div>
-      )}
-
-      {!loadingResumes && filteredResumes.length > 0 && (
-        <div className="resumes-section">
-          {filteredResumes.map((resume) => (
-              <ResumeCard key={resume.id} resume={resume} onDelete={() => handleResumeDeleted(resume.id)} />
-          ))}
-        </div>
-      )}
-
-      {!loadingResumes && resumes.length > 0 && filteredResumes.length === 0 && (
-          <div className="flex flex-col items-center justify-center mt-6 gap-2 text-slate-500">
-            <p>No resumes match "{query}".</p>
-          </div>
-      )}
-
-      {!loadingResumes && resumes?.length === 0 && (
-          <div className="flex flex-col items-center justify-center mt-10 gap-6">
-            <div className="flex size-16 items-center justify-center rounded-2xl bg-surface-800/70 border border-border-soft text-slate-500 float-slow">
-              <svg viewBox="0 0 24 24" fill="none" className="size-8" xmlns="http://www.w3.org/2000/svg">
-                <path d="M7 3.5H14L19 8.5V20.5C19 21.0523 18.5523 21.5 18 21.5H7C6.44772 21.5 6 21.0523 6 20.5V4.5C6 3.94772 6.44772 3.5 7 3.5Z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
-                <path d="M14 3.5V8.5H19" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
-              </svg>
+  return (
+    <main className="dashboard-bg">
+      <Navbar />
+      <section className="main-section">
+        <div className="editorial-hero">
+          <div className="editorial-hero-copy">
+            <span className="section-eyebrow flex items-center gap-2"><span className="size-2 rounded-full bg-accent-blue pulse-glow" /> Resume intelligence, made useful</span>
+            <h1 className="editorial-title"><span>Make your CV</span><span className="display-serif">work harder.</span></h1>
+            <p className="editorial-copy">Understand where your strengths can take you. CVsense combines thoughtful resume analysis with practical, role-aware next steps so you can move forward with confidence.</p>
+            <div className="editorial-actions">
+              <Link to="/upload" className="primary-button w-fit px-6">Start your analysis <span aria-hidden="true">↗</span></Link>
+              {resumes.length > 0 && <a href="#history" className="editorial-link">Review your history <span aria-hidden="true">↓</span></a>}
             </div>
-            <Link to="/upload" className="primary-button w-fit text-lg font-semibold px-6">
-              Upload Resume
-            </Link>
           </div>
-      )}
-    </section>
-  </main>
+          <div className="editorial-visual" aria-label="Rose-pink potential orb illustration">
+            <div className="hero-orbit" aria-hidden="true" />
+            <div className="hero-orbit-two" aria-hidden="true" />
+            <div className="hero-index" aria-hidden="true">01</div>
+            <div className="hero-orb"><span className="hero-orb-label">Your<br />potential</span></div>
+            <p className="hero-caption">01 / Begin with curiosity</p>
+          </div>
+        </div>
+
+        <div id="history" className="history-header">
+          <div>
+            <span className="section-eyebrow">Your workspace</span>
+            <h2 className="text-4xl! text-stone-950! font-semibold!">Resume history</h2>
+            <p className="mt-2 text-sm text-stone-600">{loadingResumes ? "Loading your saved analyses…" : resumes.length ? `${completedCount} completed ${completedCount === 1 ? "review" : "reviews"} ready to revisit.` : "Your saved analyses will appear here."}</p>
+          </div>
+          {resumes.length > 0 && <Link to="/upload" className="secondary-button w-fit">Upload another resume <span aria-hidden="true">↗</span></Link>}
+        </div>
+
+        {!loadingResumes && resumes.length > 0 && (
+          <div className="w-full max-w-2xl relative">
+            <label htmlFor="history-search" className="sr-only">Search resume history</label>
+            <svg viewBox="0 0 24 24" fill="none" className="size-4.5 absolute left-4 top-1/2 -translate-y-1/2 text-stone-500" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="1.6" /><path d="M21 21L16.5 16.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" /></svg>
+            <input id="history-search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search by company, role, or filename…" className="pl-11" />
+          </div>
+        )}
+
+        {loadingResumes && <div className="flex flex-col items-center justify-center gap-4 py-8"><div className="loader-orb" aria-hidden="true" /><p className="text-sm text-stone-500 font-mono animate-pulse">Loading your resume history…</p></div>}
+
+        {!loadingResumes && filteredResumes.length > 0 && <div className="resumes-section">{filteredResumes.map((resume) => <ResumeCard key={resume.id} resume={resume} onDelete={() => handleResumeDeleted(resume.id)} />)}</div>}
+
+        {!loadingResumes && resumes.length > 0 && filteredResumes.length === 0 && <div className="empty-editorial"><p>No resumes match “{query}”.</p><button type="button" className="editorial-link" onClick={() => setQuery("")}>Clear search</button></div>}
+
+        {!loadingResumes && resumes.length === 0 && <div className="empty-editorial"><div className="empty-mark" aria-hidden="true">+</div><p>No saved analyses yet.</p><Link to="/upload" className="editorial-link">Upload your first resume <span aria-hidden="true">↗</span></Link></div>}
+      </section>
+    </main>
+  );
 }
