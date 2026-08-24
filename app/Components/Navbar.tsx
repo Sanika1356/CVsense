@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { usePuterStore } from "~/lib/puter";
 
 const LogoutIcon = () => (
@@ -12,6 +12,12 @@ const Navbar = () => {
     const { auth, isLoading } = usePuterStore();
     const navigate = useNavigate();
     const [isSigningOut, setIsSigningOut] = useState(false);
+    const [theme, setTheme] = useState<"light" | "dark">(() => typeof window !== "undefined" && window.localStorage.getItem("cvsense-theme") === "dark" ? "dark" : "light");
+
+    useEffect(() => {
+        document.documentElement.classList.toggle("theme-dark", theme === "dark");
+        window.localStorage.setItem("cvsense-theme", theme);
+    }, [theme]);
 
     const handleLogout = async () => {
         if (isSigningOut) return;
@@ -32,12 +38,18 @@ const Navbar = () => {
                 <a href="/#history" className="nav-link">History</a>
                 <Link to="/privacy" className="nav-link">Privacy</Link>
             </div>}
-            {isLoading ? <button className="secondary-button text-xs px-4 animate-pulse" aria-label="Checking sign-in status" disabled>Checking session…</button> : auth.isAuthenticated ? (
-                <div className="flex flex-row items-center gap-2">
-                    <Link to="/upload" className="primary-button w-fit text-xs px-4">Upload resume <span aria-hidden="true">↗</span></Link>
-                    <button type="button" onClick={handleLogout} disabled={isSigningOut} className="secondary-button text-xs px-4 disabled:opacity-50 disabled:cursor-wait" aria-label="Log out"><LogoutIcon />{isSigningOut ? "Logging out…" : "Sign out"}</button>
-                </div>
-            ) : null}
+            <div className="navbar-actions">
+                <button type="button" className="theme-toggle" onClick={() => setTheme((current) => current === "light" ? "dark" : "light")} aria-label={`Switch to ${theme === "light" ? "dark" : "light"} theme`} aria-pressed={theme === "dark"} title={`Switch to ${theme === "light" ? "dark" : "light"} theme`}>
+                    {theme === "light" ? <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3V5M12 19V21M4.22 4.22L5.64 5.64M18.36 18.36L19.78 19.78M3 12H5M19 12H21M4.22 19.78L5.64 18.36M18.36 5.64L19.78 4.22M16 12A4 4 0 1 1 8 12A4 4 0 0 1 16 12Z" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" /></svg> : <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20.5 15.3A8.5 8.5 0 0 1 8.7 3.5A8.5 8.5 0 1 0 20.5 15.3Z" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" /></svg>}
+                    <span className="hidden sm:inline">{theme === "light" ? "Dark" : "Light"}</span>
+                </button>
+                {isLoading ? <button className="secondary-button text-xs px-4 animate-pulse" aria-label="Checking sign-in status" disabled>Checking session…</button> : auth.isAuthenticated ? (
+                    <div className="flex flex-row items-center gap-2">
+                        <Link to="/upload" className="primary-button w-fit text-xs px-4">Upload resume <span aria-hidden="true">↗</span></Link>
+                        <button type="button" onClick={handleLogout} disabled={isSigningOut} className="secondary-button text-xs px-4 disabled:opacity-50 disabled:cursor-wait" aria-label="Log out"><LogoutIcon />{isSigningOut ? "Logging out…" : "Sign out"}</button>
+                    </div>
+                ) : null}
+            </div>
         </nav>
     );
 };
