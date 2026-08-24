@@ -696,6 +696,66 @@ html.theme-dark .auth-card {
   }
 }
 
+/* Report-specific contrast corrections for dark mode. The report uses
+   many explicit surface/text utilities, so the shell override alone is not
+   enough to prevent pale cards and low-contrast copy. */
+html.theme-dark .cvsense-report {
+  color: #e6edf5;
+}
+
+html.theme-dark .cvsense-report .panel,
+html.theme-dark .cvsense-report [class*="bg-surface-800"] {
+  background-color: #1b2733 !important;
+  border-color: rgba(225, 235, 245, 0.16) !important;
+}
+
+html.theme-dark .cvsense-report [class*="bg-surface-700"] {
+  background-color: #263442 !important;
+}
+
+html.theme-dark .cvsense-report [class*="bg-surface-600"] {
+  background-color: #314454 !important;
+}
+
+html.theme-dark .cvsense-report [class*="bg-light-blue"] {
+  background-color: rgba(141, 184, 229, 0.12) !important;
+}
+
+html.theme-dark .cvsense-report [class*="text-slate-100"],
+html.theme-dark .cvsense-report [class*="text-slate-200"] {
+  color: #eef4fa !important;
+}
+
+html.theme-dark .cvsense-report [class*="text-slate-300"] {
+  color: #cfdae4 !important;
+}
+
+html.theme-dark .cvsense-report [class*="text-slate-400"] {
+  color: #b0bfcc !important;
+}
+
+html.theme-dark .cvsense-report [class*="text-slate-500"] {
+  color: #8fa1b0 !important;
+}
+
+html.theme-dark .cvsense-report [class*="text-blue-300"],
+html.theme-dark .cvsense-report [class*="text-violet-300"] {
+  color: #a9d0f2 !important;
+}
+
+html.theme-dark .cvsense-report [class*="border-border"],
+html.theme-dark .cvsense-report [class*="border-white"] {
+  border-color: rgba(225, 235, 245, 0.18) !important;
+}
+
+html.theme-dark .cvsense-report .report-header {
+  background: linear-gradient(110deg, #182430, #263c4e 52%, #1b2a38) !important;
+}
+
+html.theme-dark .cvsense-report [class*="text-surface-600"] {
+  color: #60778a !important;
+}
+
 /* ============================================================
    PRINT / SAVE AS PDF STYLES
    Applied when the user clicks "Download PDF Report".

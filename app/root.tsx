@@ -32,6 +32,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     init()
+    const storedTheme = window.localStorage.getItem("cvsense-theme")
+    document.documentElement.classList.toggle("theme-dark", storedTheme === "dark")
   }, [init]);
 
   return (
