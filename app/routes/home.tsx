@@ -66,12 +66,10 @@ export default function Home() {
               {resumes.length > 0 && <a href="#history" className="editorial-link">Review your history <span aria-hidden="true">↓</span></a>}
             </div>
           </div>
-          <div className="editorial-visual" aria-label="Rose-pink potential orb illustration">
-            <div className="hero-orbit" aria-hidden="true" />
-            <div className="hero-orbit-two" aria-hidden="true" />
-            <div className="hero-index" aria-hidden="true">01</div>
-            <div className="hero-orb"><span className="hero-orb-label">Your<br />potential</span></div>
-            <p className="hero-caption">01 / Begin with curiosity</p>
+          <div className="editorial-visual editorial-image-frame">
+            <img src="/images/career-editorial.jpg" alt="A light-blue folder, resume pages, pen, and glass sphere arranged on an editorial desk." />
+            <div className="hero-image-overlay" aria-hidden="true" />
+            <p className="hero-caption">01 / Begin with intention</p>
           </div>
         </div>
 

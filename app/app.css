@@ -339,6 +339,18 @@ form {
     @apply absolute inset-0 bg-linear-to-br from-white/30 via-transparent to-accent-violet/10;
   }
 
+  .editorial-image-frame {
+    @apply min-h-115;
+  }
+
+  .editorial-image-frame img {
+    @apply absolute inset-0 size-full object-cover;
+  }
+
+  .hero-image-overlay {
+    @apply absolute inset-0 bg-linear-to-t from-stone-950/50 via-transparent to-transparent;
+  }
+
   .hero-orbit {
     @apply absolute rounded-full border border-accent-violet/35;
     width: 68%; height: 42%; transform: rotate(-25deg);
@@ -632,6 +644,10 @@ html.theme-dark .empty-editorial {
 html.theme-dark .editorial-visual {
   background: #263442;
   border-color: rgba(225, 235, 245, 0.12);
+}
+
+html.theme-dark .hero-image-overlay {
+  background: linear-gradient(to top, rgba(9, 16, 24, 0.68), transparent 58%);
 }
 
 html.theme-dark .panel,

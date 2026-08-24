@@ -36,7 +36,6 @@ const Navbar = () => {
                 <Link to="/" className="nav-link">Dashboard</Link>
                 <Link to="/upload" className="nav-link">New analysis</Link>
                 <a href="/#history" className="nav-link">History</a>
-                <Link to="/privacy" className="nav-link">Privacy</Link>
             </div>}
             <div className="navbar-actions">
                 <button type="button" className="theme-toggle" onClick={() => setTheme((current) => current === "light" ? "dark" : "light")} aria-label={`Switch to ${theme === "light" ? "dark" : "light"} theme`} aria-pressed={theme === "dark"} title={`Switch to ${theme === "light" ? "dark" : "light"} theme`}>
