@@ -14,7 +14,6 @@ import {useEffect} from "react";
 
 export const links: Route.LinksFunction = () => [
   { rel: "icon", type: "image/png", sizes: "32x32", href: "/favicon.png" },
-  { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
   { rel: "apple-touch-icon", sizes: "512x512", href: "/favicon-512x512.png" },
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
   {
@@ -36,15 +35,15 @@ export function Layout({ children }: { children: React.ReactNode }) {
   }, [init]);
 
   return (
-    <html lang="en" className="dark">
+    <html lang="en">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#06070c" />
+        <meta name="theme-color" content="#8db8e5" />
         <Meta />
         <Links />
       </head>
-      <body className="bg-bg-950 text-slate-200">
+      <body className="bg-bg-950 text-stone-800">
         <script src="https://js.puter.com/v2/"></script>
         {children}
         <ScrollRestoration />
